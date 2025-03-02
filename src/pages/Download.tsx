@@ -3,7 +3,14 @@ import { useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { animationClasses } from '@/lib/animations';
-import { Download, ArrowRight, Smartphone, Shield, Star, CheckCircle } from 'lucide-react';
+import { 
+  Download as DownloadIcon, 
+  ArrowRight, 
+  Smartphone, 
+  Shield, 
+  Star, 
+  CheckCircle 
+} from 'lucide-react';
 
 const Download = () => {
   const [selectedPlatform, setSelectedPlatform] = useState<'android' | 'ios'>('android');
@@ -53,12 +60,12 @@ const Download = () => {
                 <div className="aspect-[3/5] bg-white/10 rounded-3xl overflow-hidden relative mx-auto max-w-xs">
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="text-center">
-                      <Smartphone size={64} className="mx-auto mb-4 text-white/70" />
+                      <Smartphone className="mx-auto mb-4 text-white/70 w-16 h-16" />
                       <h3 className="text-xl font-medium mb-2">BarberMatch App</h3>
                       <p className="text-white/70 mb-6">Versão 1.0.0</p>
                       
                       <button className="bg-white text-primary px-6 py-3 rounded-full flex items-center gap-2 mx-auto hover:bg-white/90 transition-colors">
-                        <Download size={20} />
+                        <DownloadIcon className="w-5 h-5" />
                         <span className="font-medium">
                           {selectedPlatform === 'android' ? 'Baixar APK' : 'App Store'}
                         </span>
@@ -84,7 +91,7 @@ const Download = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               <div className={`glass p-6 rounded-2xl ${animationClasses.fadeIn}`} style={{ animationDelay: '100ms' }}>
                 <div className="mb-4 rounded-full w-12 h-12 flex items-center justify-center bg-primary/10 text-primary">
-                  <Smartphone size={24} />
+                  <Smartphone className="w-6 h-6" />
                 </div>
                 <h3 className="text-xl font-bold mb-2">Experiência Nativa</h3>
                 <p className="text-muted-foreground">
@@ -94,7 +101,7 @@ const Download = () => {
               
               <div className={`glass p-6 rounded-2xl ${animationClasses.fadeIn}`} style={{ animationDelay: '200ms' }}>
                 <div className="mb-4 rounded-full w-12 h-12 flex items-center justify-center bg-primary/10 text-primary">
-                  <Shield size={24} />
+                  <Shield className="w-6 h-6" />
                 </div>
                 <h3 className="text-xl font-bold mb-2">Pagamentos Seguros</h3>
                 <p className="text-muted-foreground">
@@ -104,7 +111,7 @@ const Download = () => {
               
               <div className={`glass p-6 rounded-2xl ${animationClasses.fadeIn}`} style={{ animationDelay: '300ms' }}>
                 <div className="mb-4 rounded-full w-12 h-12 flex items-center justify-center bg-primary/10 text-primary">
-                  <Star size={24} />
+                  <Star className="w-6 h-6" />
                 </div>
                 <h3 className="text-xl font-bold mb-2">Acesso Premium</h3>
                 <p className="text-muted-foreground">
@@ -136,7 +143,7 @@ const Download = () => {
                         Clique no botão de download acima para baixar o arquivo APK do BarberMatch.
                       </p>
                       <button className="bg-primary text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm">
-                        <Download size={16} />
+                        <DownloadIcon className="w-4 h-4" />
                         <span>Baixar BarberMatch.apk</span>
                       </button>
                     </div>
@@ -210,12 +217,12 @@ const Download = () => {
               
               <div className="flex flex-wrap gap-4 justify-center">
                 <button className="px-8 py-4 bg-white text-primary rounded-full flex items-center gap-2 hover:bg-white/90 transition-colors">
-                  <Download size={20} />
+                  <DownloadIcon className="w-5 h-5" />
                   <span className="font-medium">Baixar Agora</span>
                 </button>
                 <a href="#" className="px-8 py-4 bg-white/10 text-white rounded-full flex items-center gap-2 hover:bg-white/20 transition-colors">
                   <span className="font-medium">Saiba Mais</span>
-                  <ArrowRight size={20} />
+                  <ArrowRight className="w-5 h-5" />
                 </a>
               </div>
             </div>
