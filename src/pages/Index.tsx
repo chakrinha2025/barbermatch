@@ -6,6 +6,7 @@ import { FeatureCard } from '@/components/FeatureCard';
 import { ARPreview } from '@/components/ARPreview';
 import { BarberCard } from '@/components/BarberCard';
 import { Footer } from '@/components/Footer';
+import { Link } from 'react-router-dom';
 import { 
   Scissors, 
   Calendar, 
@@ -18,10 +19,10 @@ import {
 } from 'lucide-react';
 
 const BARBERS = [
-  { name: "Alex Martin", specialty: "Fades & Classic Cuts", rating: 4.9, reviewCount: 324, imageIndex: 1 },
-  { name: "Marcus Johnson", specialty: "Beard Styling", rating: 4.7, reviewCount: 221, imageIndex: 2 },
-  { name: "Ryan Garcia", specialty: "Modern Styles", rating: 4.8, reviewCount: 189, imageIndex: 3 },
-  { name: "David Wilson", specialty: "Vintage Cuts", rating: 4.6, reviewCount: 156, imageIndex: 4 },
+  { name: "Alex Martin", specialty: "Degradês & Cortes Clássicos", rating: 4.9, reviewCount: 324, imageIndex: 1 },
+  { name: "Marcus Johnson", specialty: "Estilização de Barba", rating: 4.7, reviewCount: 221, imageIndex: 2 },
+  { name: "Ryan Garcia", specialty: "Estilos Modernos", rating: 4.8, reviewCount: 189, imageIndex: 3 },
+  { name: "David Wilson", specialty: "Cortes Vintage", rating: 4.6, reviewCount: 156, imageIndex: 4 },
 ];
 
 const Index = () => {
@@ -42,46 +43,46 @@ const Index = () => {
         <section id="features" className="section-padding">
           <div className="container-tight">
             <div className="text-center mb-16">
-              <h2 className="heading-2 mb-4">App Features</h2>
+              <h2 className="heading-2 mb-4">Recursos do Aplicativo</h2>
               <p className="sub-heading max-w-2xl mx-auto">
-                Explore the innovative features that make BarberMatch the ultimate barber booking platform
+                Explore os recursos inovadores que fazem do BarberMatch a melhor plataforma para agendamento de barbearia
               </p>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <FeatureCard
-                title="AI Style Recommendations"
-                description="Get personalized haircut suggestions based on your face shape and preferences"
+                title="Recomendações de Estilo por IA"
+                description="Receba sugestões de corte personalizadas com base no formato do seu rosto e preferências"
                 icon={<Scissors size={24} />}
                 delay={100}
               />
               <FeatureCard
-                title="Smart Scheduling"
-                description="Book appointments that fit perfectly into your calendar"
+                title="Agendamento Inteligente"
+                description="Marque horários que se encaixam perfeitamente na sua agenda"
                 icon={<Calendar size={24} />}
                 delay={200}
               />
               <FeatureCard
-                title="Barber Discovery"
-                description="Find top-rated barbers in your area with the skills you need"
+                title="Descoberta de Barbeiros"
+                description="Encontre barbeiros bem avaliados na sua região com as habilidades que você precisa"
                 icon={<MapPin size={24} />}
                 delay={300}
               />
               <FeatureCard
-                title="Wait Time Predictions"
-                description="Know exactly how long your appointment will take"
+                title="Previsão de Tempo de Espera"
+                description="Saiba exatamente quanto tempo seu agendamento levará"
                 icon={<Clock size={24} />}
                 delay={400}
               />
               <FeatureCard
-                title="In-App Messaging"
-                description="Chat directly with your barber for perfect results"
+                title="Chat no Aplicativo"
+                description="Converse diretamente com seu barbeiro para resultados perfeitos"
                 icon={<MessageSquare size={24} />}
                 delay={500}
               />
               <FeatureCard
-                title="AR Technology"
-                description="Preview haircuts on yourself before your appointment"
+                title="Tecnologia de RA"
+                description="Pré-visualize cortes em você mesmo antes do seu agendamento"
                 icon={<Sparkles size={24} />}
                 delay={600}
               />
@@ -96,9 +97,9 @@ const Index = () => {
         <section id="find-barbers" className="section-padding">
           <div className="container-tight">
             <div className="text-center mb-16">
-              <h2 className="heading-2 mb-4">Featured Barbers</h2>
+              <h2 className="heading-2 mb-4">Barbeiros em Destaque</h2>
               <p className="sub-heading max-w-2xl mx-auto">
-                Connect with skilled professionals who can bring your style to life
+                Conecte-se com profissionais qualificados que podem dar vida ao seu estilo
               </p>
             </div>
             
@@ -121,7 +122,7 @@ const Index = () => {
                 href="#"
                 className="inline-flex items-center text-primary font-medium hover:underline"
               >
-                View all barbers <ArrowRight size={16} className="ml-1" />
+                Ver todos os barbeiros <ArrowRight size={16} className="ml-1" />
               </a>
             </div>
           </div>
@@ -130,26 +131,19 @@ const Index = () => {
         {/* Download Section */}
         <section id="download" className="section-padding bg-primary text-white">
           <div className="container text-center">
-            <h2 className="heading-2 mb-4">Download BarberMatch</h2>
+            <h2 className="heading-2 mb-4">Baixe o BarberMatch</h2>
             <p className="sub-heading text-white/80 max-w-xl mx-auto mb-8">
-              Get the app now and transform your barbershop experience
+              Obtenha o aplicativo agora e transforme sua experiência de barbearia
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-              <a
-                href="#"
+              <Link
+                to="/download"
                 className="px-6 py-3 bg-white text-primary rounded-full flex items-center justify-center gap-2 hover:bg-white/90 transition-colors"
               >
                 <Download size={20} />
-                <span className="font-medium">App Store</span>
-              </a>
-              <a
-                href="#"
-                className="px-6 py-3 bg-white/10 text-white border border-white/20 rounded-full flex items-center justify-center gap-2 hover:bg-white/20 transition-colors"
-              >
-                <Download size={20} />
-                <span className="font-medium">Google Play</span>
-              </a>
+                <span className="font-medium">Saiba Mais</span>
+              </Link>
             </div>
           </div>
         </section>

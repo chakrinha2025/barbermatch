@@ -2,6 +2,8 @@
 import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { animationClasses } from '@/lib/animations';
+import { ThemeToggle } from './ThemeToggle';
+import { Link } from 'react-router-dom';
 
 interface NavLink {
   label: string;
@@ -9,11 +11,12 @@ interface NavLink {
 }
 
 const navLinks: NavLink[] = [
-  { label: 'Home', href: '/' },
-  { label: 'Virtual Try-On', href: '#virtual-try-on' },
-  { label: 'Find Barbers', href: '#find-barbers' },
-  { label: 'App Features', href: '#features' },
-  { label: 'Download', href: '#download' },
+  { label: 'Início', href: '/' },
+  { label: 'Experimentar Virtual', href: '#virtual-try-on' },
+  { label: 'Barbeiros', href: '#find-barbers' },
+  { label: 'Recursos', href: '#features' },
+  { label: 'Baixar App', href: '/download' },
+  { label: 'Sobre', href: '/about' },
 ];
 
 export function Header() {
@@ -36,32 +39,47 @@ export function Header() {
       } ${animationClasses.slideDown}`}
     >
       <div className="container flex items-center justify-between">
-        <a href="/" className="flex items-center gap-2">
+        <Link to="/" className="flex items-center gap-2">
           <span className="text-xl font-bold text-primary">BarberMatch</span>
-        </a>
+        </Link>
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-8">
           {navLinks.map((link, i) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className="text-sm font-medium text-foreground/80 hover:text-primary smooth-transform"
-              style={{ animationDelay: `${i * 100}ms` }}
-            >
-              {link.label}
-            </a>
+            link.href.startsWith('#') ? (
+              <a
+                key={link.href}
+                href={link.href}
+                className="text-sm font-medium text-foreground/80 hover:text-primary smooth-transform"
+                style={{ animationDelay: `${i * 100}ms` }}
+              >
+                {link.label}
+              </a>
+            ) : (
+              <Link
+                key={link.href}
+                to={link.href}
+                className="text-sm font-medium text-foreground/80 hover:text-primary smooth-transform"
+                style={{ animationDelay: `${i * 100}ms` }}
+              >
+                {link.label}
+              </Link>
+            )
           ))}
         </nav>
 
-        {/* Mobile Menu Button */}
-        <button
-          className="md:hidden p-2 text-foreground"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
-        >
-          {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
+        <div className="flex items-center gap-4">
+          <ThemeToggle />
+          
+          {/* Mobile Menu Button */}
+          <button
+            className="md:hidden p-2 text-foreground"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label={mobileMenuOpen ? 'Fechar menu' : 'Abrir menu'}
+          >
+            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
 
         {/* Mobile Navigation */}
         {mobileMenuOpen && (
@@ -72,21 +90,32 @@ export function Header() {
                 <button
                   className="p-2 text-foreground"
                   onClick={() => setMobileMenuOpen(false)}
-                  aria-label="Close menu"
+                  aria-label="Fechar menu"
                 >
                   <X size={24} />
                 </button>
               </div>
               <nav className="flex flex-col space-y-6">
                 {navLinks.map((link) => (
-                  <a
-                    key={link.href}
-                    href={link.href}
-                    className="text-lg font-medium text-foreground/80 hover:text-primary smooth-transform"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    {link.label}
-                  </a>
+                  link.href.startsWith('#') ? (
+                    <a
+                      key={link.href}
+                      href={link.href}
+                      className="text-lg font-medium text-foreground/80 hover:text-primary smooth-transform"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      {link.label}
+                    </a>
+                  ) : (
+                    <Link
+                      key={link.href}
+                      to={link.href}
+                      className="text-lg font-medium text-foreground/80 hover:text-primary smooth-transform"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      {link.label}
+                    </Link>
+                  )
                 ))}
               </nav>
             </div>

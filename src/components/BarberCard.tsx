@@ -40,7 +40,7 @@ export function BarberCard({
         <div className="flex items-center gap-1">
           <Star size={16} className="text-amber-500 fill-amber-500" />
           <span className="font-medium">{rating}</span>
-          <span className="text-xs text-muted-foreground">({reviewCount} reviews)</span>
+          <span className="text-xs text-muted-foreground">({reviewCount} avaliações)</span>
         </div>
       </div>
     </div>
