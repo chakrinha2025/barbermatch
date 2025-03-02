@@ -5,6 +5,7 @@ import HeroSection from '@/components/HeroSection';
 import { FeatureCard } from '@/components/FeatureCard';
 import { ARPreview } from '@/components/ARPreview';
 import { BarberCard } from '@/components/BarberCard';
+import { VirtualTryOnTool } from '@/components/VirtualTryOnTool';
 import { Footer } from '@/components/Footer';
 import { Link } from 'react-router-dom';
 import { 
@@ -92,6 +93,9 @@ const Index = () => {
         
         {/* AR Preview Section */}
         <ARPreview />
+        
+        {/* Virtual Try-On Tool Section */}
+        <VirtualTryOnTool />
         
         {/* Barbers Section */}
         <section id="find-barbers" className="section-padding">

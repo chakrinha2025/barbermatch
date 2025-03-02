@@ -1,27 +1,14 @@
 
 import { useState, useEffect } from 'react';
-import { Menu, X } from 'lucide-react';
-import { animationClasses } from '@/lib/animations';
-import { ThemeToggle } from './ThemeToggle';
 import { Link } from 'react-router-dom';
+import { Menu, X } from 'lucide-react';
+import { ThemeToggle } from './ThemeToggle';
+import { Logo } from './Logo';
+import { animationClasses } from '@/lib/animations';
 
-interface NavLink {
-  label: string;
-  href: string;
-}
-
-const navLinks: NavLink[] = [
-  { label: 'Início', href: '/' },
-  { label: 'Experimentar Virtual', href: '#virtual-try-on' },
-  { label: 'Barbeiros', href: '#find-barbers' },
-  { label: 'Recursos', href: '#features' },
-  { label: 'Baixar App', href: '/download' },
-  { label: 'Sobre', href: '/about' },
-];
-
-export function Header() {
+const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -35,95 +22,107 @@ export function Header() {
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'py-3 glass shadow-sm' : 'py-5 bg-transparent'
-      } ${animationClasses.slideDown}`}
+        isScrolled ? 'py-2 bg-background/80 backdrop-blur-xl shadow-sm' : 'py-4 bg-transparent'
+      }`}
     >
-      <div className="container flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2">
-          <span className="text-xl font-bold text-primary">BarberMatch</span>
+      <div className="container mx-auto px-4 flex items-center justify-between">
+        <Link to="/" className={animationClasses.fadeIn}>
+          <Logo />
         </Link>
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-8">
-          {navLinks.map((link, i) => (
-            link.href.startsWith('#') ? (
-              <a
-                key={link.href}
-                href={link.href}
-                className="text-sm font-medium text-foreground/80 hover:text-primary smooth-transform"
-                style={{ animationDelay: `${i * 100}ms` }}
-              >
-                {link.label}
-              </a>
-            ) : (
-              <Link
-                key={link.href}
-                to={link.href}
-                className="text-sm font-medium text-foreground/80 hover:text-primary smooth-transform"
-                style={{ animationDelay: `${i * 100}ms` }}
-              >
-                {link.label}
-              </Link>
-            )
-          ))}
+          <Link to="/" className="font-medium hover:text-primary transition-colors">
+            Início
+          </Link>
+          <Link to="#features" className="font-medium hover:text-primary transition-colors">
+            Recursos
+          </Link>
+          <Link to="#virtual-try-on" className="font-medium hover:text-primary transition-colors">
+            Experimentar
+          </Link>
+          <Link to="#download" className="font-medium hover:text-primary transition-colors">
+            Download
+          </Link>
+          <Link to="/about" className="font-medium hover:text-primary transition-colors">
+            Sobre
+          </Link>
         </nav>
 
-        <div className="flex items-center gap-4">
+        <div className="hidden md:flex items-center gap-4">
           <ThemeToggle />
-          
-          {/* Mobile Menu Button */}
-          <button
-            className="md:hidden p-2 text-foreground"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label={mobileMenuOpen ? 'Fechar menu' : 'Abrir menu'}
+          <Link
+            to="/download"
+            className="bg-primary text-white px-4 py-2 rounded-full font-medium hover:bg-primary/90 transition-colors shadow-premium-hover"
           >
-            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+            Baixar App
+          </Link>
         </div>
 
-        {/* Mobile Navigation */}
-        {mobileMenuOpen && (
-          <div className="fixed inset-0 z-50 bg-background/95 backdrop-blur-sm md:hidden">
-            <div className="flex flex-col p-6 space-y-6">
-              <div className="flex justify-between items-center">
-                <span className="text-xl font-bold text-primary">BarberMatch</span>
-                <button
-                  className="p-2 text-foreground"
-                  onClick={() => setMobileMenuOpen(false)}
-                  aria-label="Fechar menu"
-                >
-                  <X size={24} />
-                </button>
-              </div>
-              <nav className="flex flex-col space-y-6">
-                {navLinks.map((link) => (
-                  link.href.startsWith('#') ? (
-                    <a
-                      key={link.href}
-                      href={link.href}
-                      className="text-lg font-medium text-foreground/80 hover:text-primary smooth-transform"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      {link.label}
-                    </a>
-                  ) : (
-                    <Link
-                      key={link.href}
-                      to={link.href}
-                      className="text-lg font-medium text-foreground/80 hover:text-primary smooth-transform"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      {link.label}
-                    </Link>
-                  )
-                ))}
-              </nav>
-            </div>
-          </div>
-        )}
+        {/* Mobile Menu Button */}
+        <div className="flex items-center gap-4 md:hidden">
+          <ThemeToggle />
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="p-2 text-foreground"
+            aria-label="Toggle menu"
+          >
+            {isMobileMenuOpen ? <X /> : <Menu />}
+          </button>
+        </div>
       </div>
+
+      {/* Mobile Menu */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden fixed inset-0 top-16 bg-background z-40 p-4">
+          <nav className="flex flex-col gap-4 p-4">
+            <Link
+              to="/"
+              className="py-2 px-4 hover:bg-muted rounded-lg font-medium"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Início
+            </Link>
+            <Link
+              to="#features"
+              className="py-2 px-4 hover:bg-muted rounded-lg font-medium"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Recursos
+            </Link>
+            <Link
+              to="#virtual-try-on"
+              className="py-2 px-4 hover:bg-muted rounded-lg font-medium"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Experimentar
+            </Link>
+            <Link
+              to="#download"
+              className="py-2 px-4 hover:bg-muted rounded-lg font-medium"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Download
+            </Link>
+            <Link
+              to="/about"
+              className="py-2 px-4 hover:bg-muted rounded-lg font-medium"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Sobre
+            </Link>
+            <Link
+              to="/download"
+              className="mt-4 bg-primary text-white py-3 px-4 rounded-xl font-medium text-center shadow-premium-hover"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Baixar App
+            </Link>
+          </nav>
+        </div>
+      )}
     </header>
   );
-}
+};
 
 export default Header;
