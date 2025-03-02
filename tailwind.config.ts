@@ -108,6 +108,13 @@ export default {
           "0%, 100%": { transform: "translateY(0)" },
           "50%": { transform: "translateY(-10px)" },
         },
+        heartbeat: {
+          "0%": { transform: "scale(1)" },
+          "14%": { transform: "scale(1.3)" },
+          "28%": { transform: "scale(1)" },
+          "42%": { transform: "scale(1.3)" },
+          "70%": { transform: "scale(1)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -121,11 +128,13 @@ export default {
         "slide-in-left": "slide-in-left 0.5s ease-out forwards",
         pulse: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
         float: "float 3s ease-in-out infinite",
+        heartbeat: "heartbeat 1.5s ease-in-out infinite",
       },
       boxShadow: {
         glass: "0 4px 30px rgba(0, 0, 0, 0.1)",
         premium: "0 10px 30px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.06)",
         soft: "0 5px 15px rgba(0, 0, 0, 0.05)",
+        "premium-hover": "0 15px 35px rgba(0, 0, 0, 0.12), 0 5px 15px rgba(0, 0, 0, 0.08)",
       },
       typography: {
         DEFAULT: {

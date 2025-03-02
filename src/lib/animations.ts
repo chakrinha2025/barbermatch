@@ -88,4 +88,10 @@ export const animationClasses = {
   slideInLeft: 'animate-slide-in-left',
   pulse: 'animate-pulse',
   float: 'animate-float',
+  spin: 'animate-spin',
+  ping: 'animate-ping',
+  bounce: 'animate-bounce',
+  heartbeat: 'animate-heartbeat',
 };
+
+// Adicionando keyframes animação de batimento cardíaco (heartbeat) no tailwind.config.ts

@@ -1,6 +1,5 @@
-
 import { useState, useRef, useEffect } from 'react';
-import { Camera, Scissors, ArrowRight, RefreshCw, Camera as CameraIcon, Download, CheckCircle } from 'lucide-react';
+import { Camera, Scissors, ArrowRight, RefreshCw, Camera as CameraIcon, Download, CheckCircle, X } from 'lucide-react';
 import { animationClasses } from '@/lib/animations';
 
 const HAIRSTYLES = [
@@ -22,7 +21,6 @@ export function VirtualTryOnTool() {
   const streamRef = useRef<MediaStream | null>(null);
 
   useEffect(() => {
-    // Limpar o stream da câmera quando o componente for desmontado
     return () => {
       if (streamRef.current) {
         streamRef.current.getTracks().forEach(track => track.stop());
@@ -72,18 +70,14 @@ export function VirtualTryOnTool() {
     
     if (!context) return;
     
-    // Configurar o canvas para o tamanho do vídeo
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     
-    // Desenhar o frame atual do vídeo no canvas
     context.drawImage(video, 0, 0, canvas.width, canvas.height);
     
-    // Converter o canvas para uma URL de dados
     const dataUrl = canvas.toDataURL('image/png');
     setPreview(dataUrl);
     
-    // Simular processamento da IA
     setProcessing(true);
     setTimeout(() => {
       setProcessing(false);
@@ -112,7 +106,6 @@ export function VirtualTryOnTool() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-7 gap-8 items-start">
-          {/* Seleção de estilos - 2 colunas */}
           <div className={`lg:col-span-2 space-y-6 ${animationClasses.fadeIn}`}>
             <div className="glass p-6 rounded-xl">
               <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
@@ -161,13 +154,11 @@ export function VirtualTryOnTool() {
             </div>
           </div>
 
-          {/* Visualização da câmera - 5 colunas */}
           <div className={`lg:col-span-5 ${animationClasses.fadeIn}`} style={{ animationDelay: '200ms' }}>
             <div className="aspect-video rounded-xl glass overflow-hidden relative">
-              {/* Overlay se não estiver ativo */}
               {!cameraActive && !preview && (
                 <div className="absolute inset-0 flex flex-col items-center justify-center p-6">
-                  <CameraIcon size={48} className="text-primary mb-4" />
+                  <CameraIcon size={48} className="text-primary mb-4 animate-float" />
                   <h3 className="text-xl font-bold mb-2">Experimente Virtual</h3>
                   <p className="text-sm text-muted-foreground mb-6 text-center max-w-md">
                     Permita o acesso à sua câmera para testar diferentes estilos de corte com nossa 
@@ -183,7 +174,6 @@ export function VirtualTryOnTool() {
                 </div>
               )}
 
-              {/* Vídeo da câmera */}
               {cameraActive && !preview && (
                 <>
                   <video 
@@ -225,7 +215,6 @@ export function VirtualTryOnTool() {
                 </>
               )}
 
-              {/* Preview de imagem capturada */}
               {preview && (
                 <>
                   <img 
@@ -276,7 +265,6 @@ export function VirtualTryOnTool() {
               )}
             </div>
 
-            {/* Canvas escondido para processamento */}
             <canvas ref={canvasRef} className="hidden" />
 
             {cameraActive && (
