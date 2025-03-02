@@ -1,69 +1,77 @@
-# Welcome to your Lovable project
 
-## Project info
+# BarberMatch - Revolucionando a Experiência de Barbearia
 
-**URL**: https://lovable.dev/projects/3b72d1b0-54c6-4242-8fe3-dde6fc714e98
+![BarberMatch](public/og-image.png)
 
-## How can I edit this code?
+## Sobre o Projeto
 
-There are several ways of editing your application.
+O BarberMatch é uma inovadora plataforma que revoluciona o setor de barbearias, oferecendo uma experiência personalizada para clientes e um sistema inteligente para barbeiros e donos de barbearias. Através da integração de Inteligência Artificial (IA) e Realidade Aumentada (AR), nossa solução permite que os usuários testem cortes virtualmente, encontrem barbeiros ideais e façam agendamentos de forma otimizada.
 
-**Use Lovable**
+Este repositório contém o site oficial do BarberMatch, projetado como uma vitrine para o aplicativo móvel (que é o produto principal) e seus recursos inovadores.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/3b72d1b0-54c6-4242-8fe3-dde6fc714e98) and start prompting.
+## Principais Recursos do App BarberMatch
 
-Changes made via Lovable will be committed automatically to this repo.
+### Para Clientes
 
-**Use your preferred IDE**
+- **Experimentação Virtual**: Teste diferentes cortes de cabelo e estilos de barba usando realidade aumentada antes de agendar
+- **Recomendações Personalizadas**: Receba sugestões de cortes com base no formato do seu rosto e preferências pessoais
+- **Agendamento Inteligente**: Marque horários facilmente e receba lembretes automáticos
+- **Busca Avançada**: Encontre barbeiros por localização, especialidade, avaliações e disponibilidade
+- **Pagamentos In-App**: Pague diretamente pelo aplicativo usando diversos métodos (Pix, cartões, Apple Pay, Google Pay)
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Para Barbeiros/Barbearias
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+- **Gestão de Agenda**: Controle de horários e clientes com sistema inteligente de otimização
+- **Perfil Profissional**: Destaque seu trabalho com uma galeria de fotos e avaliações
+- **Análise de Desempenho**: Acompanhe estatísticas e tendências dos serviços mais procurados
+- **Fidelização de Clientes**: Crie promoções e programas de fidelidade diretamente no app
+- **Sistema de Comunicação**: Chat integrado para alinhar expectativas com os clientes
 
-Follow these steps:
+## Tecnologias Utilizadas
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### Frontend Mobile
+- React Native
+- Expo
+- TailwindCSS
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### Backend
+- Node.js com NestJS e Express.js
+- Supabase (PostgreSQL gerenciado)
 
-# Step 3: Install the necessary dependencies.
-npm i
+### Tecnologias de IA e AR
+- TensorFlow
+- Face-api.js
+- DeepFace
+- Three.js
+- ARKit (iOS)
+- ARCore (Android)
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+### Pagamentos e Integrações
+- Stripe
+- Pix
+- PayPal
+- Apple Pay
+- Google Pay
+- MercadoPago
+- API WhatsApp Business
+- OpenAI GPT para chatbots e suporte
 
-**Edit a file directly in GitHub**
+## Instalação do Aplicativo
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+O aplicativo BarberMatch está disponível para download nas principais plataformas:
 
-**Use GitHub Codespaces**
+- **Android**: [Google Play Store](https://play.google.com/store) (em breve)
+- **iOS**: [App Store](https://apps.apple.com) (em breve)
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+Para mais detalhes sobre a instalação e requisitos do sistema, visite a [página de download](https://barbermatch.app/download).
 
-## What technologies are used for this project?
+## Contato e Suporte
 
-This project is built with .
+Para mais informações, entre em contato conosco:
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+- **Email**: contato@barbermatch.app
+- **Site**: [www.barbermatch.app](https://barbermatch.app)
 
-## How can I deploy this project?
+## Licença
 
-Simply open [Lovable](https://lovable.dev/projects/3b72d1b0-54c6-4242-8fe3-dde6fc714e98) and click on Share -> Publish.
-
-## I want to use a custom domain - is that possible?
-
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+© 2023 BarberMatch. Todos os direitos reservados.

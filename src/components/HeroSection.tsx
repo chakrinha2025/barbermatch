@@ -24,29 +24,29 @@ export function HeroSection() {
           <div className={`space-y-8 ${loaded ? animationClasses.fadeIn : 'opacity-0'}`}>
             <div className="inline-flex items-center px-3 py-1 rounded-full border text-sm font-medium">
               <span className="w-2 h-2 bg-primary rounded-full mr-2 animate-pulse"></span>
-              Revolutionizing Barbershop Experience
+              Revolucionando a Experiência de Barbearia
             </div>
             
             <h1 className="heading-1">
-              Find Your Perfect <span className="text-gradient">Haircut</span> with AI
+              Encontre seu <span className="text-gradient">Corte Perfeito</span> com IA
             </h1>
             
             <p className="sub-heading max-w-xl">
-              BarberMatch uses AI and AR to help you preview haircuts, find the perfect barber, and book appointments seamlessly.
+              O BarberMatch usa IA e RA para ajudar você a visualizar cortes, encontrar o barbeiro perfeito e agendar horários sem complicações.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4">
               <a
                 href="#download"
-                className="bg-primary text-white px-6 py-3 rounded-full font-medium flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors"
+                className="bg-primary text-white px-6 py-3 rounded-full font-medium flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors shadow-premium-hover"
               >
-                Get Started <ArrowRight size={18} />
+                Começar Agora <ArrowRight className="w-4 h-4" />
               </a>
               <a
                 href="#virtual-try-on"
                 className="border px-6 py-3 rounded-full font-medium flex items-center justify-center hover:bg-secondary transition-colors"
               >
-                Try Virtual Haircuts
+                Experimente Cortes Virtuais
               </a>
             </div>
             
@@ -60,7 +60,7 @@ export function HeroSection() {
                 ))}
               </div>
               <div className="text-sm">
-                <span className="font-bold">4,000+</span> satisfied customers
+                <span className="font-bold">4.000+</span> clientes satisfeitos
               </div>
             </div>
           </div>
@@ -74,17 +74,17 @@ export function HeroSection() {
               <div className="flex justify-between items-start">
                 <div className="glass px-4 py-2 rounded-full flex items-center gap-2">
                   <div className="w-2 h-2 bg-primary rounded-full" />
-                  <span className="text-sm font-medium">Virtual Try-On</span>
+                  <span className="text-sm font-medium">Experimente Virtual</span>
                 </div>
                 
                 <div className="glass px-4 py-2 rounded-full">
-                  <span className="text-sm font-medium">AI-Powered</span>
+                  <span className="text-sm font-medium">Impulsionado por IA</span>
                 </div>
               </div>
               
               <div className="flex justify-end">
                 <div className="glass px-4 py-2 rounded-full animate-float">
-                  <span className="text-sm font-medium">Find Perfect Match</span>
+                  <span className="text-sm font-medium">Encontre o Match Perfeito</span>
                 </div>
               </div>
             </div>

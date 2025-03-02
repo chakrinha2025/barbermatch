@@ -53,37 +53,37 @@ const Index = () => {
               <FeatureCard
                 title="Recomendações de Estilo por IA"
                 description="Receba sugestões de corte personalizadas com base no formato do seu rosto e preferências"
-                icon={<Scissors size={24} />}
+                icon={<Scissors className="w-6 h-6" />}
                 delay={100}
               />
               <FeatureCard
                 title="Agendamento Inteligente"
                 description="Marque horários que se encaixam perfeitamente na sua agenda"
-                icon={<Calendar size={24} />}
+                icon={<Calendar className="w-6 h-6" />}
                 delay={200}
               />
               <FeatureCard
                 title="Descoberta de Barbeiros"
                 description="Encontre barbeiros bem avaliados na sua região com as habilidades que você precisa"
-                icon={<MapPin size={24} />}
+                icon={<MapPin className="w-6 h-6" />}
                 delay={300}
               />
               <FeatureCard
                 title="Previsão de Tempo de Espera"
                 description="Saiba exatamente quanto tempo seu agendamento levará"
-                icon={<Clock size={24} />}
+                icon={<Clock className="w-6 h-6" />}
                 delay={400}
               />
               <FeatureCard
                 title="Chat no Aplicativo"
                 description="Converse diretamente com seu barbeiro para resultados perfeitos"
-                icon={<MessageSquare size={24} />}
+                icon={<MessageSquare className="w-6 h-6" />}
                 delay={500}
               />
               <FeatureCard
                 title="Tecnologia de RA"
                 description="Pré-visualize cortes em você mesmo antes do seu agendamento"
-                icon={<Sparkles size={24} />}
+                icon={<Sparkles className="w-6 h-6" />}
                 delay={600}
               />
             </div>
@@ -122,7 +122,7 @@ const Index = () => {
                 href="#"
                 className="inline-flex items-center text-primary font-medium hover:underline"
               >
-                Ver todos os barbeiros <ArrowRight size={16} className="ml-1" />
+                Ver todos os barbeiros <ArrowRight className="w-4 h-4 ml-1" />
               </a>
             </div>
           </div>
@@ -141,7 +141,7 @@ const Index = () => {
                 to="/download"
                 className="px-6 py-3 bg-white text-primary rounded-full flex items-center justify-center gap-2 hover:bg-white/90 transition-colors"
               >
-                <Download size={20} />
+                <Download className="w-5 h-5" />
                 <span className="font-medium">Saiba Mais</span>
               </Link>
             </div>

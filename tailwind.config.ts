@@ -60,7 +60,8 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        sans: ["Inter var", "Inter", "sans-serif"],
+        sans: ["Montserrat", "sans-serif"],
+        heading: ["Playfair Display", "serif"],
       },
       keyframes: {
         "accordion-down": {
@@ -123,6 +124,8 @@ export default {
       },
       boxShadow: {
         glass: "0 4px 30px rgba(0, 0, 0, 0.1)",
+        premium: "0 10px 30px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.06)",
+        soft: "0 5px 15px rgba(0, 0, 0, 0.05)",
       },
       typography: {
         DEFAULT: {
