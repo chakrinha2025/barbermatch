@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -11,9 +10,31 @@ import {
   Star, 
   CheckCircle 
 } from 'lucide-react';
+import { useSearchParams } from 'react-router-dom';
+import { FeatureType, FEATURE_ACCESS } from '@/utils/planAccess';
 
 const Download = () => {
   const [selectedPlatform, setSelectedPlatform] = useState<'android' | 'ios'>('android');
+  const [searchParams] = useSearchParams();
+  
+  // Extrair informações dos parâmetros de URL
+  const feature = searchParams.get('feature') as FeatureType | null;
+  
+  // Calcular mensagem de contexto baseada nos parâmetros
+  const getFeatureContext = () => {
+    if (!feature) return null;
+    
+    const featureInfo = FEATURE_ACCESS[feature];
+    if (!featureInfo) return null;
+    
+    return {
+      title: `Baixe o App para ${featureInfo.name}`,
+      description: `O aplicativo BarberMatch é necessário para acessar a funcionalidade de ${featureInfo.name}.`,
+      featureName: featureInfo.name
+    };
+  };
+  
+  const featureContext = getFeatureContext();
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -25,11 +46,11 @@ const Download = () => {
           <div className="container-tight">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <div className={`text-center lg:text-left ${animationClasses.fadeIn}`}>
-                <h1 className="heading-1 mb-6">
-                  Baixe o BarberMatch e transforme sua experiência de barbearia
+                <h1 className="text-3xl font-bold mb-2">
+                  {featureContext?.title || "Baixe o App BarberMatch"}
                 </h1>
-                <p className="text-xl mb-8 text-white/90">
-                  Experimente virtualmente novos cortes, encontre os melhores barbeiros e agende com facilidade.
+                <p className="text-muted-foreground max-w-lg mx-auto">
+                  {featureContext?.description || "Agende seu corte, encontre barbeiros e experimente cortes virtualmente. Tudo em um só lugar."}
                 </p>
                 
                 <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
@@ -56,7 +77,7 @@ const Download = () => {
                 </div>
               </div>
               
-              <div className={`${animationClasses.fadeIn}`} style={{ animationDelay: '200ms' }}>
+              <div className={`${animationClasses.fadeIn} animation-delay-200`}>
                 <div className="aspect-[3/5] bg-white/10 rounded-3xl overflow-hidden relative mx-auto max-w-xs">
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="text-center">
@@ -89,7 +110,7 @@ const Download = () => {
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              <div className={`glass p-6 rounded-2xl ${animationClasses.fadeIn}`} style={{ animationDelay: '100ms' }}>
+              <div className={`glass p-6 rounded-2xl ${animationClasses.fadeIn} animation-delay-100`}>
                 <div className="mb-4 rounded-full w-12 h-12 flex items-center justify-center bg-primary/10 text-primary">
                   <Smartphone className="w-6 h-6" />
                 </div>
@@ -99,7 +120,7 @@ const Download = () => {
                 </p>
               </div>
               
-              <div className={`glass p-6 rounded-2xl ${animationClasses.fadeIn}`} style={{ animationDelay: '200ms' }}>
+              <div className={`glass p-6 rounded-2xl ${animationClasses.fadeIn} animation-delay-200`}>
                 <div className="mb-4 rounded-full w-12 h-12 flex items-center justify-center bg-primary/10 text-primary">
                   <Shield className="w-6 h-6" />
                 </div>
@@ -109,7 +130,7 @@ const Download = () => {
                 </p>
               </div>
               
-              <div className={`glass p-6 rounded-2xl ${animationClasses.fadeIn}`} style={{ animationDelay: '300ms' }}>
+              <div className={`glass p-6 rounded-2xl ${animationClasses.fadeIn} animation-delay-300`}>
                 <div className="mb-4 rounded-full w-12 h-12 flex items-center justify-center bg-primary/10 text-primary">
                   <Star className="w-6 h-6" />
                 </div>
@@ -135,7 +156,7 @@ const Download = () => {
             <div className="max-w-3xl mx-auto">
               {selectedPlatform === 'android' ? (
                 <div className="space-y-8">
-                  <div className={`flex gap-6 items-start ${animationClasses.fadeIn}`}>
+                  <div className={`flex gap-6 items-start ${animationClasses.fadeIn} animation-delay-100`}>
                     <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold">1</div>
                     <div>
                       <h3 className="text-xl font-bold mb-2">Baixe o APK</h3>
@@ -149,7 +170,7 @@ const Download = () => {
                     </div>
                   </div>
                   
-                  <div className={`flex gap-6 items-start ${animationClasses.fadeIn}`} style={{ animationDelay: '100ms' }}>
+                  <div className={`flex gap-6 items-start ${animationClasses.fadeIn} animation-delay-200`}>
                     <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold">2</div>
                     <div>
                       <h3 className="text-xl font-bold mb-2">Permita a instalação</h3>
@@ -159,7 +180,7 @@ const Download = () => {
                     </div>
                   </div>
                   
-                  <div className={`flex gap-6 items-start ${animationClasses.fadeIn}`} style={{ animationDelay: '200ms' }}>
+                  <div className={`flex gap-6 items-start ${animationClasses.fadeIn} animation-delay-300`}>
                     <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold">3</div>
                     <div>
                       <h3 className="text-xl font-bold mb-2">Instale o aplicativo</h3>
@@ -171,7 +192,7 @@ const Download = () => {
                 </div>
               ) : (
                 <div className="space-y-8">
-                  <div className={`flex gap-6 items-start ${animationClasses.fadeIn}`}>
+                  <div className={`flex gap-6 items-start ${animationClasses.fadeIn} animation-delay-100`}>
                     <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold">1</div>
                     <div>
                       <h3 className="text-xl font-bold mb-2">Abra a App Store</h3>
@@ -181,7 +202,7 @@ const Download = () => {
                     </div>
                   </div>
                   
-                  <div className={`flex gap-6 items-start ${animationClasses.fadeIn}`} style={{ animationDelay: '100ms' }}>
+                  <div className={`flex gap-6 items-start ${animationClasses.fadeIn} animation-delay-200`}>
                     <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold">2</div>
                     <div>
                       <h3 className="text-xl font-bold mb-2">Busque por BarberMatch</h3>
@@ -191,7 +212,7 @@ const Download = () => {
                     </div>
                   </div>
                   
-                  <div className={`flex gap-6 items-start ${animationClasses.fadeIn}`} style={{ animationDelay: '200ms' }}>
+                  <div className={`flex gap-6 items-start ${animationClasses.fadeIn} animation-delay-300`}>
                     <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold">3</div>
                     <div>
                       <h3 className="text-xl font-bold mb-2">Baixe e instale</h3>
@@ -228,6 +249,19 @@ const Download = () => {
             </div>
           </div>
         </section>
+
+        {/* Se tiver um feature específico, adicione uma seção destacando-o */}
+        {feature && featureContext && (
+          <div className="mt-12 mb-8 bg-primary/5 p-6 rounded-xl max-w-4xl mx-auto">
+            <h3 className="text-xl font-bold mb-3">Acesso Exclusivo: {featureContext.featureName}</h3>
+            <p className="mb-4">
+              Para aproveitar todos os recursos de {featureContext.featureName}, você precisa do aplicativo BarberMatch instalado.
+            </p>
+            <div className="bg-amber-50 border border-amber-100 rounded-lg p-3 text-sm text-amber-800">
+              <p>Após instalar o aplicativo, faça login com a mesma conta para acessar os recursos.</p>
+            </div>
+          </div>
+        )}
       </main>
       
       <Footer />

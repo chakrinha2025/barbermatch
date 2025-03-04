@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { animationClasses } from '@/lib/animations';
 import { Scissors, Camera, Sparkles } from 'lucide-react';
@@ -50,7 +49,7 @@ export function ARPreview() {
               </div>
             </div>
 
-            <div className={`space-y-4 ${animationClasses.fadeIn}`} style={{ animationDelay: '200ms' }}>
+            <div className={`space-y-4 ${animationClasses.fadeInDelay200}`}>
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Scissors size={16} />
                 <span>Recomendações de estilo por IA</span>
@@ -66,7 +65,7 @@ export function ARPreview() {
             </div>
           </div>
 
-          <div className={`lg:col-span-3 ${animationClasses.fadeIn}`} style={{ animationDelay: '300ms' }}>
+          <div className={`lg:col-span-3 ${animationClasses.fadeInDelay300}`}>
             <div className="aspect-[3/4] rounded-2xl glass overflow-hidden relative">
               <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/5" />
               

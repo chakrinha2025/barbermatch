@@ -1,4 +1,3 @@
-
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { animationClasses } from '@/lib/animations';
@@ -17,7 +16,7 @@ const Cookies = () => {
             </p>
           </div>
           
-          <div className={`prose prose-lg max-w-none ${animationClasses.fadeIn}`} style={{ animationDelay: '100ms' }}>
+          <div className={`prose prose-lg max-w-none ${animationClasses.fadeIn} animation-delay-100`}>
             <h2>1. O que são Cookies?</h2>
             <p>
               Cookies são pequenos arquivos de texto que são armazenados no seu dispositivo quando você usa nosso aplicativo ou visita nosso site. Eles são amplamente utilizados para fazer com que os aplicativos funcionem ou funcionem de maneira mais eficiente, bem como para fornecer informações aos proprietários do aplicativo.

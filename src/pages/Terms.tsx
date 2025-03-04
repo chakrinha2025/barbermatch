@@ -1,4 +1,3 @@
-
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { animationClasses } from '@/lib/animations';
@@ -17,7 +16,7 @@ const Terms = () => {
             </p>
           </div>
           
-          <div className={`prose prose-lg max-w-none ${animationClasses.fadeIn}`} style={{ animationDelay: '100ms' }}>
+          <div className={`prose prose-lg max-w-none ${animationClasses.fadeIn} animation-delay-100`}>
             <h2>1. Aceitação dos Termos</h2>
             <p>
               Ao acessar ou usar o aplicativo BarberMatch, você concorda com estes Termos de Uso. Se você não concordar com qualquer parte destes termos, não poderá acessar ou usar nosso serviço.

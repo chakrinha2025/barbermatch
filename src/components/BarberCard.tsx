@@ -1,6 +1,5 @@
-
-import { Star } from 'lucide-react';
-import { animationClasses } from '@/lib/animations';
+import { Scissors, Star } from "lucide-react";
+import { animationClasses } from "@/lib/animations";
 
 interface BarberCardProps {
   name: string;
@@ -10,6 +9,16 @@ interface BarberCardProps {
   imageIndex: number;
   delay?: number;
 }
+
+// Função auxiliar para escolher a classe de delay com base no valor de delay
+const getDelayClass = (delay: number): string => {
+  if (delay === 0) return animationClasses.fadeIn;
+  if (delay <= 100) return animationClasses.fadeInDelay100;
+  if (delay <= 200) return animationClasses.fadeInDelay200;
+  if (delay <= 300) return animationClasses.fadeInDelay300;
+  if (delay <= 400) return animationClasses.fadeInDelay400;
+  return animationClasses.fadeInDelay500;
+};
 
 export function BarberCard({ 
   name, 
@@ -21,8 +30,7 @@ export function BarberCard({
 }: BarberCardProps) {
   return (
     <div 
-      className={`rounded-xl overflow-hidden glass card-hover ${animationClasses.fadeIn}`}
-      style={{ animationDelay: `${delay}ms` }}
+      className={`rounded-xl overflow-hidden glass card-hover ${getDelayClass(delay)}`}
     >
       <div className="aspect-[3/4] bg-secondary relative">
         {/* This would be an image in a real app */}

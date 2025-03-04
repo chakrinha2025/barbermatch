@@ -1,4 +1,3 @@
-
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { animationClasses } from '@/lib/animations';
@@ -17,7 +16,7 @@ const DataProcessing = () => {
             </p>
           </div>
           
-          <div className={`prose prose-lg max-w-none ${animationClasses.fadeIn}`} style={{ animationDelay: '100ms' }}>
+          <div className={`prose prose-lg max-w-none ${animationClasses.fadeIn} animation-delay-100`}>
             <h2>1. Introdução</h2>
             <p>
               Este documento descreve como o BarberMatch processa dados pessoais em conformidade com a Lei Geral de Proteção de Dados (LGPD) e outras leis de privacidade aplicáveis.

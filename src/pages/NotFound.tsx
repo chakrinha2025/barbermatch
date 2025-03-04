@@ -1,37 +1,42 @@
+import { Link } from 'react-router-dom';
+import { Home } from 'lucide-react';
 
-import { useLocation } from "react-router-dom";
-import { useEffect } from "react";
-import { Home } from "lucide-react";
-import { animationClasses } from "@/lib/animations";
-
-const NotFound = () => {
-  const location = useLocation();
-
-  useEffect(() => {
-    console.error(
-      "404 Erro: Usuário tentou acessar rota inexistente:",
-      location.pathname
-    );
-  }, [location.pathname]);
-
+export default function NotFound() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className={`text-center max-w-md px-6 ${animationClasses.scaleIn}`}>
-        <span className="inline-block text-9xl font-bold text-primary mb-4">404</span>
-        <h1 className="text-3xl font-bold mb-4">Página não encontrada</h1>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-background p-4">
+      <div className="text-center">
+        <h1 className="text-8xl font-bold text-primary">404</h1>
+        <h2 className="text-2xl font-bold mt-4 mb-2">Página não encontrada</h2>
         <p className="text-muted-foreground mb-8">
-          A página que você está procurando não existe ou foi movida.
+          A página que você está procurando não existe ou
+          foi movida.
         </p>
-        <a
-          href="/"
-          className="inline-flex items-center justify-center gap-2 bg-primary text-white px-6 py-3 rounded-full hover:bg-primary/90 transition-colors"
-        >
-          <Home size={18} />
-          <span>Voltar ao Início</span>
-        </a>
+        
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <Link 
+            to="/" 
+            className="px-6 py-3 rounded-full bg-primary text-white font-medium flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors"
+          >
+            <Home size={18} />
+            Voltar ao Início
+          </Link>
+          
+          <Link 
+            to="/#virtual-try-on" 
+            className="px-6 py-3 rounded-full border border-input bg-background font-medium hover:bg-accent transition-colors"
+          >
+            Experimente Virtual
+          </Link>
+        </div>
+        
+        <div className="mt-12 flex flex-wrap justify-center gap-6">
+          <Link to="/about" className="text-sm text-muted-foreground hover:text-primary">Sobre</Link>
+          <Link to="/download" className="text-sm text-muted-foreground hover:text-primary">Download</Link>
+          <Link to="/#features" className="text-sm text-muted-foreground hover:text-primary">Recursos</Link>
+          <Link to="/pricing" className="text-sm text-muted-foreground hover:text-primary">Preços</Link>
+          <Link to="/login" className="text-sm text-muted-foreground hover:text-primary">Entrar</Link>
+        </div>
       </div>
     </div>
   );
-};
-
-export default NotFound;
+}

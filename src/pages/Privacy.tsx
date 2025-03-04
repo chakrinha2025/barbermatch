@@ -1,4 +1,3 @@
-
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { animationClasses } from '@/lib/animations';
@@ -17,7 +16,7 @@ const Privacy = () => {
             </p>
           </div>
           
-          <div className={`prose prose-lg max-w-none ${animationClasses.fadeIn}`} style={{ animationDelay: '100ms' }}>
+          <div className={`prose prose-lg max-w-none ${animationClasses.fadeIn} animation-delay-100`}>
             <h2>1. Introdução</h2>
             <p>
               O BarberMatch ("nós", "nosso" ou "nossos") está comprometido em proteger sua privacidade. Esta Política de Privacidade descreve como coletamos, usamos e compartilhamos suas informações pessoais quando você usa nosso aplicativo móvel BarberMatch.

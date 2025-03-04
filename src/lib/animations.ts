@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 
 // Animation variants for staggered animations
@@ -81,7 +80,15 @@ export function useInView() {
 // Animation classes for elements
 export const animationClasses = {
   fadeIn: 'animate-fade-in',
+  fadeInDelay100: 'animate-fade-in delay-100',
+  fadeInDelay200: 'animate-fade-in delay-200',
+  fadeInDelay300: 'animate-fade-in delay-300',
+  fadeInDelay400: 'animate-fade-in delay-400',
+  fadeInDelay500: 'animate-fade-in delay-500',
   scaleIn: 'animate-scale-in',
+  scaleInDelay100: 'animate-scale-in delay-100',
+  scaleInDelay200: 'animate-scale-in delay-200',
+  scaleInDelay300: 'animate-scale-in delay-300',
   slideUp: 'animate-slide-up',
   slideDown: 'animate-slide-down',
   slideInRight: 'animate-slide-in-right',
@@ -92,6 +99,27 @@ export const animationClasses = {
   ping: 'animate-ping',
   bounce: 'animate-bounce',
   heartbeat: 'animate-heartbeat',
+};
+
+// Função para gerar classes de porcentagem de largura (para barras de progresso)
+export const getWidthClass = (percentage: number): string => {
+  // Arredondar para o valor mais próximo de 5% para otimizar
+  const roundedPercentage = Math.round(percentage / 5) * 5;
+  return `w-[${roundedPercentage}%]`;
+};
+
+// Função para gerar classes de porcentagem de altura
+export const getHeightClass = (percentage: number): string => {
+  // Arredondar para o valor mais próximo de 5% para otimizar
+  const roundedPercentage = Math.round(percentage / 5) * 5;
+  return `h-[${roundedPercentage}%]`;
+};
+
+// Função para calcular classes de largura baseadas em um valor e um máximo
+export const calcWidthPercentage = (value: number, max: number): string => {
+  const percentage = Math.min(100, Math.max(0, (value / max) * 100));
+  const roundedPercentage = Math.round(percentage / 5) * 5;
+  return `w-[${roundedPercentage}%]`;
 };
 
 // Adicionando keyframes animação de batimento cardíaco (heartbeat) no tailwind.config.ts

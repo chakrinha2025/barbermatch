@@ -1,5 +1,5 @@
-
 import type { Config } from "tailwindcss";
+import plugin from "tailwindcss/plugin";
 
 export default {
   darkMode: ["class"],
@@ -100,13 +100,13 @@ export default {
           "0%": { transform: "translateX(-100%)" },
           "100%": { transform: "translateX(0)" },
         },
-        pulse: {
-          "0%, 100%": { opacity: "1" },
-          "50%": { opacity: "0.5" },
-        },
         float: {
           "0%, 100%": { transform: "translateY(0)" },
           "50%": { transform: "translateY(-10px)" },
+        },
+        pulse: {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0.5" },
         },
         heartbeat: {
           "0%": { transform: "scale(1)" },
@@ -126,15 +126,20 @@ export default {
         "slide-down": "slide-down 0.5s ease-out forwards",
         "slide-in-right": "slide-in-right 0.5s ease-out forwards",
         "slide-in-left": "slide-in-left 0.5s ease-out forwards",
-        pulse: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
         float: "float 3s ease-in-out infinite",
+        pulse: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
         heartbeat: "heartbeat 1.5s ease-in-out infinite",
+      },
+      backgroundImage: {
+        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
       },
       boxShadow: {
         glass: "0 4px 30px rgba(0, 0, 0, 0.1)",
         premium: "0 10px 30px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.06)",
         soft: "0 5px 15px rgba(0, 0, 0, 0.05)",
         "premium-hover": "0 15px 35px rgba(0, 0, 0, 0.12), 0 5px 15px rgba(0, 0, 0, 0.08)",
+        'premium': '0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01)',
+        'premium-dark': '0 10px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.2)',
       },
       typography: {
         DEFAULT: {
@@ -174,5 +179,45 @@ export default {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+    require("tailwindcss-animate"),
+    plugin(function({ addUtilities }) {
+      const newUtilities = {
+        '.text-gradient': {
+          'background-clip': 'text',
+          '-webkit-background-clip': 'text',
+          'color': 'transparent',
+          'background-image': 'linear-gradient(to right, hsl(var(--primary)), hsl(var(--primary-foreground)))',
+        },
+        '.glass': {
+          'background': 'rgba(255, 255, 255, 0.1)',
+          'backdrop-filter': 'blur(10px)',
+          'border': '1px solid rgba(255, 255, 255, 0.1)',
+        },
+        '.container-tight': {
+          'width': '100%',
+          'margin-left': 'auto',
+          'margin-right': 'auto',
+          'padding-left': '1.5rem',
+          'padding-right': '1.5rem',
+          'max-width': '1200px',
+        },
+        '.section-padding': {
+          'padding-top': '5rem',
+          'padding-bottom': '5rem',
+        },
+        '.heading-2': {
+          'font-size': '2.25rem',
+          'line-height': '1.2',
+          'font-weight': '700',
+        },
+        '.sub-heading': {
+          'font-size': '1.125rem',
+          'line-height': '1.6',
+          'color': 'hsl(var(--muted-foreground))',
+        },
+      };
+      addUtilities(newUtilities);
+    }),
+  ],
 } satisfies Config;
