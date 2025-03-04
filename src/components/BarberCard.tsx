@@ -17,8 +17,6 @@ const getDelayClass = (delay: number): string => {
   if (delay <= 100) return animationClasses.fadeInDelay100;
   if (delay <= 200) return animationClasses.fadeInDelay200;
   // Use apenas as classes disponíveis em animationClasses
-  if (delay <= 300) return animationClasses.fadeInDelay200;
-  if (delay <= 400) return animationClasses.fadeInDelay200;
   return animationClasses.fadeInDelay200;
 };
 

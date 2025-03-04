@@ -54,7 +54,8 @@ class BarberService {
    */
   async getBarbers(filters: BarberFilters = {}): Promise<Barber[]> {
     try {
-      return await apiService.get<Barber[]>('/barbers', filters);
+      const response = await apiService.get<any>('/barbers', filters);
+      return response?.data || [];
     } catch (error) {
       console.error('Erro ao buscar barbeiros:', error);
       throw error;
@@ -68,7 +69,8 @@ class BarberService {
    */
   async getBarberById(id: string): Promise<Barber> {
     try {
-      return await apiService.get<Barber>(`/barbers/${id}`);
+      const response = await apiService.get<any>(`/barbers/${id}`);
+      return response?.data || null;
     } catch (error) {
       console.error(`Erro ao buscar barbeiro ID ${id}:`, error);
       throw error;
@@ -82,7 +84,8 @@ class BarberService {
    */
   async getBarberServices(barberId: string): Promise<Service[]> {
     try {
-      return await apiService.get<Service[]>(`/barbers/${barberId}/services`);
+      const response = await apiService.get<any>(`/barbers/${barberId}/services`);
+      return response?.data || [];
     } catch (error) {
       console.error(`Erro ao buscar serviços do barbeiro ID ${barberId}:`, error);
       throw error;
@@ -97,7 +100,8 @@ class BarberService {
    */
   async getBarberAvailability(barberId: string, date: string): Promise<BarberAvailability> {
     try {
-      return await apiService.get<BarberAvailability>(`/barbers/${barberId}/availability`, { date });
+      const response = await apiService.get<any>(`/barbers/${barberId}/availability`, { date });
+      return response?.data || { date, availableSlots: [] };
     } catch (error) {
       console.error(`Erro ao buscar disponibilidade do barbeiro ID ${barberId}:`, error);
       throw error;
@@ -113,7 +117,8 @@ class BarberService {
    */
   async getBarberReviews(barberId: string, page = 1, limit = 10) {
     try {
-      return await apiService.get(`/barbers/${barberId}/reviews`, { page, limit });
+      const response = await apiService.get<any>(`/barbers/${barberId}/reviews`, { page, limit });
+      return response?.data || { data: [], meta: { total: 0 } };
     } catch (error) {
       console.error(`Erro ao buscar avaliações do barbeiro ID ${barberId}:`, error);
       throw error;
@@ -128,7 +133,8 @@ class BarberService {
    */
   async addBarberReview(barberId: string, data: { rating: number; comment: string }) {
     try {
-      return await apiService.post(`/barbers/${barberId}/reviews`, data);
+      const response = await apiService.post<any>(`/barbers/${barberId}/reviews`, data);
+      return response?.data || null;
     } catch (error) {
       console.error(`Erro ao adicionar avaliação para o barbeiro ID ${barberId}:`, error);
       throw error;
@@ -144,7 +150,8 @@ class BarberService {
    */
   async getNearbyBarbers(lat: number, lng: number, radius = 10): Promise<Barber[]> {
     try {
-      return await apiService.get<Barber[]>('/barbers/nearby', { lat, lng, radius });
+      const response = await apiService.get<any>('/barbers/nearby', { lat, lng, radius });
+      return response?.data || [];
     } catch (error) {
       console.error('Erro ao buscar barbeiros próximos:', error);
       throw error;
@@ -157,7 +164,8 @@ class BarberService {
    */
   async getServiceCategories() {
     try {
-      return await apiService.get('/services/categories');
+      const response = await apiService.get<any>('/services/categories');
+      return response?.data || [];
     } catch (error) {
       console.error('Erro ao buscar categorias de serviços:', error);
       throw error;
