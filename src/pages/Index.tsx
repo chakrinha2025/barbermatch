@@ -1,6 +1,8 @@
+
 import { useState, useEffect, useRef } from 'react';
 import HeroSection from '@/components/HeroSection';
 import { FeatureCard } from '@/components/FeatureCard';
+import { Feature3DCard } from '@/components/Feature3DCard';
 import { VirtualTryOnTool } from '@/components/VirtualTryOnTool';
 import { BarberCard } from '@/components/BarberCard';
 import { Link } from 'react-router-dom';
@@ -140,59 +142,63 @@ const Index = () => {
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              <Link to="/recursos/experiencia-virtual" className="block transform transition-all duration-300 hover:scale-102">
-                <FeatureCard
+              <Link to="/recursos/experiencia-virtual" className="block transform transition-all duration-300">
+                <Feature3DCard
                   title="Recomendações de Estilo por IA"
                   description="Receba sugestões de corte personalizadas com base no formato do seu rosto e preferências"
                   icon={<Scissors className="w-6 h-6 text-primary" />}
                   delay={100}
+                  colorScheme={0}
                 />
               </Link>
               
-              <Link to="/recursos/agendamento" className="block transform transition-all duration-300 hover:scale-102">
-                <FeatureCard
+              <Link to="/recursos/agendamento" className="block transform transition-all duration-300">
+                <Feature3DCard
                   title="Agendamento Inteligente"
                   description="Marque horários que se encaixam perfeitamente na sua agenda e receba lembretes automáticos"
                   icon={<Calendar className="w-6 h-6 text-primary" />}
                   delay={200}
+                  colorScheme={1}
                 />
               </Link>
               
-              <Link to="/recursos/analise-tendencias" className="block transform transition-all duration-300 hover:scale-102">
-                <FeatureCard
+              <Link to="/recursos/analise-tendencias" className="block transform transition-all duration-300">
+                <Feature3DCard
                   title="Análise de Tendências"
                   description="Descubra o que está bombando no mundo da barbearia com insights baseados em IA"
                   icon={<TrendingUp className="w-6 h-6 text-primary" />}
                   delay={300}
-                  className="bg-gradient-to-br from-purple-50/30 to-indigo-50/10 dark:from-purple-950/20 dark:to-indigo-950/10"
+                  colorScheme={2}
                 />
               </Link>
               
-              <Link to="/recursos/experiencia-virtual" className="block transform transition-all duration-300 hover:scale-102">
-                <FeatureCard
+              <Link to="/recursos/experiencia-virtual" className="block transform transition-all duration-300">
+                <Feature3DCard
                   title="Tecnologia de RA"
                   description="Pré-visualize cortes em você mesmo antes do seu agendamento, com realidade aumentada"
                   icon={<Sparkles className="w-6 h-6 text-primary" />}
                   delay={400}
+                  colorScheme={3}
                 />
               </Link>
               
-              <Link to="/recursos/agendamento" className="block transform transition-all duration-300 hover:scale-102">
-                <FeatureCard
+              <Link to="/recursos/agendamento" className="block transform transition-all duration-300">
+                <Feature3DCard
                   title="Descoberta de Barbeiros"
                   description="Encontre barbeiros bem avaliados na sua região com as habilidades que você precisa"
                   icon={<MapPin className="w-6 h-6 text-primary" />}
                   delay={500}
+                  colorScheme={4}
                 />
               </Link>
               
-              <Link to="/recursos/gestao-negocio" className="block transform transition-all duration-300 hover:scale-102">
-                <FeatureCard
+              <Link to="/recursos/gestao-negocio" className="block transform transition-all duration-300">
+                <Feature3DCard
                   title="Gestão de Negócio"
                   description="Controle completo da sua barbearia com estatísticas, agendamentos e relatórios em tempo real"
                   icon={<Store className="w-6 h-6 text-primary" />}
                   delay={600}
-                  className="bg-gradient-to-br from-blue-50/30 to-gray-50/10 dark:from-blue-950/20 dark:to-gray-950/10"
+                  colorScheme={5}
                 />
               </Link>
             </div>

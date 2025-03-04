@@ -20,6 +20,10 @@ export const animationClasses = {
   slideInDown: 'animate-slideInDown',
   slideInUp: 'animate-slideInUp',
   heartbeat: 'animate-heartbeat',
+  tiltLeft: 'animate-tiltLeft',
+  tiltRight: 'animate-tiltRight',
+  rotate3D: 'animate-rotate3D',
+  float3D: 'animate-float3D',
 };
 
 // Utility functions for working with widths and heights
@@ -70,4 +74,36 @@ export const getDelayClass = (delay: number): string => {
   if (delay <= 400) return animationClasses.fadeInDelay400;
   if (delay <= 500) return animationClasses.fadeInDelay500;
   return animationClasses.fadeInDelay500;
+};
+
+/**
+ * Generate a 3D transform string for creating perspective effects
+ * @param rotateX - X-axis rotation in degrees
+ * @param rotateY - Y-axis rotation in degrees
+ * @param rotateZ - Z-axis rotation in degrees
+ * @param translateZ - Z-axis translation in pixels
+ * @returns CSS transform string
+ */
+export const generate3DTransform = (
+  rotateX = 0, 
+  rotateY = 0, 
+  rotateZ = 0, 
+  translateZ = 0
+): string => {
+  return `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) rotateZ(${rotateZ}deg) translateZ(${translateZ}px)`;
+};
+
+/**
+ * Generate a gradient background with appropriate contrasting text color
+ * @param startColor - Starting color of gradient (hex code)
+ * @param endColor - Ending color of gradient (hex code)
+ * @param direction - Direction of gradient (e.g., 'to right', 'to bottom')
+ * @returns CSS classes for background and text color
+ */
+export const generateGradientClasses = (
+  startColor: string, 
+  endColor: string, 
+  direction = 'to right'
+): string => {
+  return `bg-gradient-[${direction},${startColor},${endColor}]`;
 };
