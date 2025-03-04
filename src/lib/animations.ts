@@ -1,3 +1,4 @@
+
 // Define animation classes for reuse throughout the application
 export const animationClasses = {
   fadeIn: 'animate-fadeIn',
