@@ -28,10 +28,19 @@ const TrendCard: React.FC<TrendCardProps> = ({
   valueSuffix = '',
 }) => {
   // Parse trend data - handles both number and object formats
-  const trendValue = typeof trend === 'object' ? trend?.value : trend;
-  const isPositive = typeof trend === 'object' 
-    ? trend?.isPositive 
-    : trend !== undefined ? trend >= 0 : undefined;
+  let trendValue: number | undefined;
+  let isPositive: boolean | undefined;
+  
+  if (typeof trend === 'object' && trend !== null) {
+    trendValue = trend.value;
+    isPositive = trend.isPositive;
+  } else if (typeof trend === 'number') {
+    trendValue = trend;
+    isPositive = trend >= 0;
+  } else {
+    trendValue = undefined;
+    isPositive = undefined;
+  }
 
   return (
     <Card className={`overflow-hidden ${className}`}>
@@ -41,7 +50,7 @@ const TrendCard: React.FC<TrendCardProps> = ({
       </CardHeader>
       <CardContent>
         <div className="text-2xl font-bold">{valuePrefix}{value}{valueSuffix}</div>
-        {trend !== undefined && (
+        {trendValue !== undefined && (
           <div className="flex items-center space-x-1">
             <span
               className={`flex items-center text-xs ${
@@ -53,14 +62,14 @@ const TrendCard: React.FC<TrendCardProps> = ({
               ) : (
                 <ArrowDown className="h-3 w-3 mr-1" />
               )}
-              {Math.abs(typeof trendValue === 'number' ? trendValue : 0)}%
+              {Math.abs(trendValue)}%
             </span>
             {description && (
               <span className="text-xs text-muted-foreground">{description}</span>
             )}
           </div>
         )}
-        {trend === undefined && description && (
+        {trendValue === undefined && description && (
           <p className="text-xs text-muted-foreground">{description}</p>
         )}
       </CardContent>
