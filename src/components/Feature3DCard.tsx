@@ -1,6 +1,7 @@
 
 import React from 'react';
 import AnimatedCard from './AnimatedCard';
+import { Lock } from 'lucide-react';
 
 interface Feature3DCardProps {
   title: string;
@@ -9,6 +10,8 @@ interface Feature3DCardProps {
   delay?: number;
   className?: string;
   colorScheme?: number;
+  isPremium?: boolean;
+  onPremiumClick?: () => void;
 }
 
 const COLOR_SCHEMES = [
@@ -26,7 +29,9 @@ export function Feature3DCard({
   icon, 
   delay = 0,
   className = "",
-  colorScheme = 0
+  colorScheme = 0,
+  isPremium = false,
+  onPremiumClick
 }: Feature3DCardProps) {
   const cardColor = COLOR_SCHEMES[colorScheme % COLOR_SCHEMES.length];
   
@@ -41,17 +46,37 @@ export function Feature3DCard({
           {icon}
         </div>
         
-        <h3 className="text-xl font-semibold mb-2">{title}</h3>
+        <h3 className="text-xl font-semibold mb-2 flex items-center">
+          {title}
+          {isPremium && (
+            <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded bg-amber-100 text-amber-800 text-xs font-medium">
+              <Lock size={12} className="mr-1" /> Premium
+            </span>
+          )}
+        </h3>
         <p className="text-muted-foreground flex-grow">{description}</p>
         
         <div className="mt-4 flex justify-end">
-          <div className="text-primary text-sm font-medium flex items-center">
-            Saiba mais
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="ml-1 transform transition-transform duration-300 group-hover:translate-x-1">
-              <path d="M4.16675 10H15.8334" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M10.8334 5L15.8334 10L10.8334 15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </div>
+          {isPremium ? (
+            <button 
+              onClick={onPremiumClick}
+              className="text-primary text-sm font-medium flex items-center"
+            >
+              Ver planos premium
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="ml-1 transform transition-transform duration-300 group-hover:translate-x-1">
+                <path d="M4.16675 10H15.8334" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M10.8334 5L15.8334 10L10.8334 15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+          ) : (
+            <div className="text-primary text-sm font-medium flex items-center">
+              Saiba mais
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="ml-1 transform transition-transform duration-300 group-hover:translate-x-1">
+                <path d="M4.16675 10H15.8334" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M10.8334 5L15.8334 10L10.8334 15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </div>
+          )}
         </div>
       </div>
     </AnimatedCard>
