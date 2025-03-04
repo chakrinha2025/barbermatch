@@ -1,173 +1,139 @@
 
-import { apiService } from './api.service';
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 
-// Interfaces de tipos para os dados da API
-export interface Barber {
-  id: string;
-  name: string;
-  email: string;
-  photo?: string;
-  phone?: string;
-  rating: number;
-  reviewCount: number;
-  specialties: string[];
-  barbershop?: {
-    id: string;
-    name: string;
-    address: string;
-    city: string;
-    state: string;
-  };
-  services?: Service[];
-}
+// Configuração base para o Axios
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3333';
 
-export interface Service {
-  id: string;
-  name: string;
-  description?: string;
-  price: number;
-  duration: number;
-}
+// Serviço de API base
+class ApiService {
+  private api: AxiosInstance;
 
-export interface BarberFilters {
-  search?: string;
-  service?: string;
-  city?: string;
-  maxDistance?: number;
-  minRating?: number;
-  maxPrice?: number;
-  page?: number;
-  limit?: number;
-}
+  constructor() {
+    this.api = axios.create({
+      baseURL: API_URL,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
-export interface BarberAvailability {
-  date: string;
-  availableSlots: string[];
-}
-
-// Serviço para gerenciar barbeiros
-class BarberService {
-  /**
-   * Busca barbeiros com base em filtros
-   * @param filters Filtros de busca
-   * @returns Lista de barbeiros
-   */
-  async getBarbers(filters: BarberFilters = {}): Promise<Barber[]> {
-    try {
-      const response = await apiService.get<{ data: Barber[] }>('/barbers', filters);
-      return response.data || [];
-    } catch (error) {
-      console.error('Erro ao buscar barbeiros:', error);
-      throw error;
-    }
+    // Configure interceptors for request and response
+    this.setupInterceptors();
   }
 
-  /**
-   * Busca um barbeiro pelo ID
-   * @param id ID do barbeiro
-   * @returns Dados do barbeiro
-   */
-  async getBarberById(id: string): Promise<Barber> {
+  private setupInterceptors() {
+    // Request interceptor
+    this.api.interceptors.request.use(
+      (config) => {
+        // Get token from localStorage
+        const token = localStorage.getItem('authToken');
+        
+        // Add authorization header if token exists
+        if (token) {
+          config.headers['Authorization'] = `Bearer ${token}`;
+        }
+        
+        return config;
+      },
+      (error) => {
+        return Promise.reject(error);
+      }
+    );
+
+    // Response interceptor
+    this.api.interceptors.response.use(
+      (response) => {
+        return response;
+      },
+      (error) => {
+        // Handle specific error status codes
+        if (error.response) {
+          const { status } = error.response;
+          
+          if (status === 401) {
+            // Handle unauthorized access (e.g., token expired)
+            localStorage.removeItem('authToken');
+            // Redirect to login page or show notification
+          } else if (status === 403) {
+            // Handle forbidden access
+            // Show appropriate notification
+          } else if (status === 404) {
+            // Handle not found
+            // Show appropriate notification
+          } else if (status === 500) {
+            // Handle server error
+            // Show appropriate notification
+          }
+        }
+        
+        // Add more descriptive error message
+        const errorMessage = error.response?.data?.message || 'Ocorreu um erro na requisição';
+        console.error('API Error:', errorMessage);
+        
+        return Promise.reject(error);
+      }
+    );
+  }
+
+  // Generic GET method
+  async get<T>(url: string, params?: any): Promise<T> {
     try {
-      const response = await apiService.get<{ data: Barber }>(`/barbers/${id}`);
+      const config: AxiosRequestConfig = {};
+      if (params) {
+        config.params = params;
+      }
+      
+      const response: AxiosResponse<T> = await this.api.get(url, config);
       return response.data;
-    } catch (error) {
-      console.error(`Erro ao buscar barbeiro ID ${id}:`, error);
-      throw error;
-    }
-  }
-
-  /**
-   * Busca os serviços oferecidos por um barbeiro
-   * @param barberId ID do barbeiro
-   * @returns Lista de serviços
-   */
-  async getBarberServices(barberId: string): Promise<Service[]> {
-    try {
-      const response = await apiService.get<{ data: Service[] }>(`/barbers/${barberId}/services`);
-      return response.data;
-    } catch (error) {
-      console.error(`Erro ao buscar serviços do barbeiro ID ${barberId}:`, error);
-      throw error;
-    }
-  }
-
-  /**
-   * Verifica a disponibilidade de horários de um barbeiro
-   * @param barberId ID do barbeiro
-   * @param date Data no formato YYYY-MM-DD
-   * @returns Horários disponíveis
-   */
-  async getBarberAvailability(barberId: string, date: string): Promise<BarberAvailability> {
-    try {
-      const response = await apiService.get<{ data: BarberAvailability }>(`/barbers/${barberId}/availability`, { date });
-      return response.data;
-    } catch (error) {
-      console.error(`Erro ao buscar disponibilidade do barbeiro ID ${barberId}:`, error);
-      throw error;
-    }
-  }
-
-  /**
-   * Busca avaliações de um barbeiro
-   * @param barberId ID do barbeiro
-   * @param page Página atual
-   * @param limit Limite de avaliações por página
-   * @returns Lista de avaliações
-   */
-  async getBarberReviews(barberId: string, page = 1, limit = 10) {
-    try {
-      return await apiService.get(`/barbers/${barberId}/reviews`, { page, limit });
-    } catch (error) {
-      console.error(`Erro ao buscar avaliações do barbeiro ID ${barberId}:`, error);
-      throw error;
-    }
-  }
-
-  /**
-   * Adiciona uma avaliação para um barbeiro
-   * @param barberId ID do barbeiro
-   * @param data Dados da avaliação
-   * @returns Avaliação criada
-   */
-  async addBarberReview(barberId: string, data: { rating: number; comment: string }) {
-    try {
-      return await apiService.post(`/barbers/${barberId}/reviews`, data);
-    } catch (error) {
-      console.error(`Erro ao adicionar avaliação para o barbeiro ID ${barberId}:`, error);
-      throw error;
-    }
-  }
-
-  /**
-   * Busca barbeiros próximos com base na localização do usuário
-   * @param lat Latitude
-   * @param lng Longitude
-   * @param radius Raio de busca em km
-   * @returns Lista de barbeiros próximos
-   */
-  async getNearbyBarbers(lat: number, lng: number, radius = 10): Promise<Barber[]> {
-    try {
-      const response = await apiService.get<{ data: Barber[] }>('/barbers/nearby', { lat, lng, radius });
-      return response.data;
-    } catch (error) {
-      console.error('Erro ao buscar barbeiros próximos:', error);
-      throw error;
-    }
-  }
-
-  /**
-   * Busca categorias de serviços disponíveis
-   * @returns Lista de categorias
-   */
-  async getServiceCategories() {
-    try {
-      return await apiService.get('/services/categories');
     } catch (error: any) {
-      console.error('Erro ao buscar categorias de serviços:', error?.message || error);
+      console.error(`GET request to ${url} failed:`, error?.message || error);
+      throw error;
+    }
+  }
+
+  // Generic POST method
+  async post<T>(url: string, data: any): Promise<T> {
+    try {
+      const response: AxiosResponse<T> = await this.api.post(url, data);
+      return response.data;
+    } catch (error: any) {
+      console.error(`POST request to ${url} failed:`, error?.message || error);
+      throw error;
+    }
+  }
+
+  // Generic PUT method
+  async put<T>(url: string, data: any): Promise<T> {
+    try {
+      const response: AxiosResponse<T> = await this.api.put(url, data);
+      return response.data;
+    } catch (error: any) {
+      console.error(`PUT request to ${url} failed:`, error?.message || error);
+      throw error;
+    }
+  }
+
+  // Generic PATCH method
+  async patch<T>(url: string, data: any): Promise<T> {
+    try {
+      const response: AxiosResponse<T> = await this.api.patch(url, data);
+      return response.data;
+    } catch (error: any) {
+      console.error(`PATCH request to ${url} failed:`, error?.message || error);
+      throw error;
+    }
+  }
+
+  // Generic DELETE method
+  async delete<T>(url: string): Promise<T> {
+    try {
+      const response: AxiosResponse<T> = await this.api.delete(url);
+      return response.data;
+    } catch (error: any) {
+      console.error(`DELETE request to ${url} failed:`, error?.message || error);
       throw error;
     }
   }
 }
 
-export const barberService = new BarberService();
+// Export a singleton instance of ApiService
+export const apiService = new ApiService();

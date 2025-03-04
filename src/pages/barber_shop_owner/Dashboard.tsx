@@ -43,8 +43,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import axios from "axios";
-import { LineChart } from "@/components/LineChart";
-import { BarChart } from "@/components/BarChart";
+import LineChart from "@/components/LineChart";
+import BarChart from "@/components/BarChart";
 import { DateRangePicker } from "@/components/DateRangePicker";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -1020,4 +1020,4 @@ export default function BarberShopOwnerDashboard() {
       </Tabs>
     </motion.div>
   );
-} 
+}
