@@ -50,7 +50,6 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { calcWidthPercentage } from '@/lib/animations';
 
-// Dados simulados para o dashboard
 const dadosFinanceiros = {
   faturamentoTotal: 'R$ 18.530,00',
   faturamentoMensal: 'R$ 4.125,80',
@@ -59,7 +58,6 @@ const dadosFinanceiros = {
   crescimento: '+12%'
 };
 
-// Dados para o gráfico de faturamento
 const dadosGraficoFaturamento = {
   labels: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"],
   datasets: [
@@ -81,7 +79,6 @@ const dadosGraficoFaturamento = {
   ]
 };
 
-// Dados para o gráfico de serviços mais populares
 const dadosGraficoServicos = {
   labels: ["Corte Degradê", "Barba", "Corte e Barba", "Sobrancelha", "Navalhado"],
   datasets: [
@@ -212,7 +209,6 @@ const cargos = [
   { value: 'recepcionista', label: 'Recepcionista' }
 ];
 
-// Componente de alerta para período de teste
 function TrialAlert() {
   const [isTrial, setIsTrial] = useState(false);
   const [daysLeft, setDaysLeft] = useState(0);
@@ -226,7 +222,6 @@ function TrialAlert() {
         if (data.plan === 'teste_gratuito' && data.trialEndsAt) {
           setIsTrial(true);
           
-          // Calcular dias restantes
           const trialEnd = new Date(data.trialEndsAt);
           const today = new Date();
           const diffTime = trialEnd.getTime() - today.getTime();
@@ -313,31 +308,16 @@ export default function BarberShopOwnerDashboard() {
     recebeComissao: true
   });
 
-  // Efeito para carregar dados da barbearia
   useEffect(() => {
     const fetchBarbershopData = async () => {
       try {
         setIsLoading(true);
         console.log("Carregando dados da barbearia...");
         
-        // Aqui utilizaríamos a chamada real
-        // const response = await axios.get('/api/barbershops/my-barbershop');
-        // setBarbershopInfo(response.data);
+        const response = await axios.get('/api/barbershops/my-barbershop');
+        setBarbershopInfo(response.data);
         
-        // Simulando um delay
-        setTimeout(() => {
-          console.log("Dados da barbearia carregados");
-          setBarbershopInfo({
-            id: '123',
-            name: 'Barbearia Estilo & Classe',
-            address: 'Av. Paulista, 1000, São Paulo - SP',
-            rating: 4.8,
-            totalReviews: 128,
-            totalEmployees: 5,
-            totalServices: 12
-          });
-          setIsLoading(false);
-        }, 1000);
+        setIsLoading(false);
       } catch (error) {
         console.error("Erro ao carregar dados da barbearia:", error);
         toast.error("Não foi possível carregar os dados da barbearia");
@@ -348,7 +328,6 @@ export default function BarberShopOwnerDashboard() {
     fetchBarbershopData();
   }, []);
 
-  // Filtrar funcionários quando o termo de busca mudar
   useEffect(() => {
     if (searchTerm) {
       const filtered = funcionarios.filter(f => 
@@ -387,11 +366,7 @@ export default function BarberShopOwnerDashboard() {
   const handleAdicionarFuncionario = async () => {
     try {
       setIsLoading(true);
-      // Aqui enviaria os dados para a API
-      // await axios.post('/api/barbershops/employees', novoFuncionario);
-      
-      // Simulando um delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await axios.post('/api/barbershops/employees', novoFuncionario);
       
       toast.success("Funcionário adicionado com sucesso!");
       setNovoFuncionarioDialogOpen(false);
@@ -413,8 +388,6 @@ export default function BarberShopOwnerDashboard() {
 
   const handleDateRangeChange = (range) => {
     setDateRange(range);
-    // Aqui você carregaria novos dados baseados no intervalo de datas
-    // fetchDataByDateRange(range);
   };
 
   const renderStatusBadge = (status: string) => {

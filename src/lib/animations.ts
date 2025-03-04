@@ -1,4 +1,3 @@
-
 // Define animation classes for reuse throughout the application
 export const animationClasses = {
   fadeIn: 'animate-fadeIn',
@@ -23,8 +22,24 @@ export const animationClasses = {
 };
 
 // Utility functions for working with widths and heights
-export const calcWidthPercentage = (percentage: number): string => {
-  return `w-[${percentage}%]`;
+/**
+ * Calculate width percentage for progress bars and other elements
+ * Accepts either a single percentage value or a value and max to calculate percentage
+ * @param valueOrPercentage - Either the direct percentage or the current value
+ * @param max - Optional maximum value to calculate percentage
+ * @returns CSS width class string
+ */
+export const calcWidthPercentage = (valueOrPercentage: number, max?: number): string => {
+  // If max is provided, calculate percentage
+  const percentage = max !== undefined ? (valueOrPercentage / max) * 100 : valueOrPercentage;
+  
+  // Ensure percentage is between 0 and 100
+  const clampedPercentage = Math.min(Math.max(percentage, 0), 100);
+  
+  // Round to nearest 5% for cleaner CSS classes
+  const roundedPercentage = Math.round(clampedPercentage / 5) * 5;
+  
+  return `w-[${roundedPercentage}%]`;
 };
 
 export const getWidthClass = (percentage: number): string => {
