@@ -1,3 +1,4 @@
+
 import { apiService } from './api.service';
 
 export interface AppointmentForm {
@@ -19,14 +20,35 @@ export interface Appointment {
   barber_id: string;
   service_id: string;
   barbershop_id?: string;
-  status: 'pending' | 'confirmed' | 'cancelled' | 'completed' | 'no_show';
+  status: 'pending' | 'confirmed' | 'completed' | 'cancelled' | 'no_show';
   price?: number;
   notes?: string;
   created_at: string;
   updated_at: string;
-  barber?: any;
+  barber?: {
+    id: string;
+    name: string;
+    photo?: string;
+    phone?: string;
+    barbershop?: {
+      id: string;
+      name: string;
+      address: string;
+    }
+  };
   client?: any;
-  service?: any;
+  service?: {
+    id: string;
+    name: string;
+    price: number;
+    duration: number;
+  };
+  // Client UI properties
+  barberName?: string;
+  barberShopName?: string;
+  barberPhone?: string;
+  address?: string;
+  barberImage?: string;
 }
 
 export interface BarberAvailability {
@@ -93,4 +115,4 @@ class AppointmentService {
   }
 }
 
-export const appointmentService = new AppointmentService(); 
+export const appointmentService = new AppointmentService();

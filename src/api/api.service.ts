@@ -1,3 +1,4 @@
+
 import axios, { AxiosInstance, AxiosError } from 'axios';
 import { toast } from 'sonner';
 
@@ -109,7 +110,9 @@ class ApiService {
         
         // Outros erros da API
         if (error.response) {
-          const message = error.response.data?.message || 'Ocorreu um erro na requisição';
+          const message = error.response.data && typeof error.response.data === 'object' && 'message' in error.response.data 
+            ? (error.response.data as {message: string}).message 
+            : 'Ocorreu um erro na requisição';
           return Promise.reject(new ApiError(message, error.response.status));
         }
         
@@ -169,7 +172,7 @@ class ApiService {
   }
 
   // Métodos genéricos para requisições
-  async get<T>(url: string, params?: any) {
+  async get<T = any>(url: string, params?: any): Promise<T> {
     try {
       const response = await this.api.get<T>(url, { params });
       return response.data;
@@ -179,7 +182,7 @@ class ApiService {
     }
   }
 
-  async post<T>(url: string, data?: any) {
+  async post<T = any>(url: string, data?: any): Promise<T> {
     try {
       const response = await this.api.post<T>(url, data);
       return response.data;
@@ -189,7 +192,7 @@ class ApiService {
     }
   }
 
-  async put<T>(url: string, data?: any) {
+  async put<T = any>(url: string, data?: any): Promise<T> {
     try {
       const response = await this.api.put<T>(url, data);
       return response.data;
@@ -199,7 +202,7 @@ class ApiService {
     }
   }
 
-  async patch<T>(url: string, data?: any) {
+  async patch<T = any>(url: string, data?: any): Promise<T> {
     try {
       const response = await this.api.patch<T>(url, data);
       return response.data;
@@ -209,7 +212,7 @@ class ApiService {
     }
   }
 
-  async delete<T>(url: string) {
+  async delete<T = any>(url: string): Promise<T> {
     try {
       const response = await this.api.delete<T>(url);
       return response.data;
@@ -224,7 +227,10 @@ class ApiService {
     if (error instanceof ApiError) {
       toast.error(error.message);
     } else if (axios.isAxiosError(error)) {
-      const message = error.response?.data?.message || 'Ocorreu um erro na requisição';
+      const errorData = error.response?.data;
+      const message = errorData && typeof errorData === 'object' && 'message' in errorData 
+        ? (errorData as {message: string}).message 
+        : 'Ocorreu um erro na requisição';
       toast.error(message);
     } else {
       toast.error('Ocorreu um erro inesperado');
@@ -234,4 +240,4 @@ class ApiService {
 }
 
 // Exportar uma instância única
-export const apiService = new ApiService(); 
+export const apiService = new ApiService();

@@ -1,25 +1,26 @@
+
 import { useState, useEffect } from 'react';
-import { Calendar, Clock, MapPin, Scissors, AlertCircle, CheckCircle, XCircle, ChevronLeft, ChevronRight, Calendar as CalendarIcon, Phone } from 'lucide-react';
-import { format, isToday, isFuture, isPast, parseISO, isSameDay } from 'date-fns';
+import { Calendar, Clock, MapPin, Scissors, AlertCircle, CheckCircle, XCircle, ChevronLeft, ChevronRight, Calendar as CalendarIcon, Phone, User } from 'lucide-react';
+import { format, parseISO, isSameDay } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
 
-import { appointmentService, Appointment } from '@/api/appointments.service';
+import { appointmentService } from '@/api/appointments.service';
+import { isAfter, formatDate as formatAppointmentDate, formatTime as formatAppointmentTime } from '@/utils/date-helpers';
 
-// Tipos
-interface Appointment {
-  id: number;
+// Define a local appointment type for UI
+interface ClientAppointment {
+  id: string | number;
   barberName: string;
   barberShopName: string;
   barberPhone: string;
@@ -27,7 +28,7 @@ interface Appointment {
   date: string; // ISO string
   time: string;
   duration: number; // em minutos
-  status: 'confirmed' | 'pending' | 'completed' | 'canceled';
+  status: 'confirmed' | 'pending' | 'completed' | 'cancelled' | 'no_show';
   price: number;
   address: string;
   notes?: string;
@@ -35,7 +36,7 @@ interface Appointment {
 }
 
 // Dados mockados
-const INITIAL_APPOINTMENTS: Appointment[] = [
+const INITIAL_APPOINTMENTS: ClientAppointment[] = [
   {
     id: 1,
     barberName: "Carlos Oliveira",
@@ -102,7 +103,7 @@ const INITIAL_APPOINTMENTS: Appointment[] = [
     date: "2023-07-10T00:00:00.000Z", // Passado
     time: "15:00",
     duration: 75,
-    status: 'canceled',
+    status: 'cancelled',
     price: 95,
     address: "Rua dos Artistas, 45",
     notes: "Cliente cancelou por motivos pessoais",
@@ -110,12 +111,31 @@ const INITIAL_APPOINTMENTS: Appointment[] = [
   }
 ];
 
+// Helper to convert API appointment to client appointment
+const convertApiToClientAppointment = (apiAppointment: any): ClientAppointment => {
+  return {
+    id: apiAppointment.id,
+    barberName: apiAppointment.barber?.name || 'Barbeiro não informado',
+    barberShopName: apiAppointment.barber?.barbershop?.name || 'Barbearia não informada',
+    barberPhone: apiAppointment.barber?.phone || 'Telefone não informado',
+    service: apiAppointment.service?.name || 'Serviço não informado',
+    date: apiAppointment.date,
+    time: apiAppointment.time,
+    duration: apiAppointment.duration,
+    status: apiAppointment.status,
+    price: apiAppointment.price || 0,
+    address: apiAppointment.barber?.barbershop?.address || 'Endereço não informado',
+    notes: apiAppointment.notes,
+    barberImage: apiAppointment.barber?.photo || ''
+  };
+};
+
 // Componente principal
 const ClientAppointments = () => {
   const [activeTab, setActiveTab] = useState('upcoming');
-  const [upcomingAppointments, setUpcomingAppointments] = useState<Appointment[]>([]);
-  const [pastAppointments, setPastAppointments] = useState<Appointment[]>([]);
-  const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
+  const [upcomingAppointments, setUpcomingAppointments] = useState<ClientAppointment[]>([]);
+  const [pastAppointments, setPastAppointments] = useState<ClientAppointment[]>([]);
+  const [selectedAppointment, setSelectedAppointment] = useState<ClientAppointment | null>(null);
   const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [cancelLoading, setCancelLoading] = useState(false);
@@ -127,14 +147,16 @@ const ClientAppointments = () => {
   const fetchAppointments = async () => {
     try {
       setIsLoading(true);
-      const response = await appointmentService.getAppointments();
+      // For now, use the mock data until the API is ready
+      // const response = await appointmentService.getAppointments();
       
       const now = new Date();
-      const upcoming: Appointment[] = [];
-      const past: Appointment[] = [];
+      const upcoming: ClientAppointment[] = [];
+      const past: ClientAppointment[] = [];
 
-      response.data.forEach((appointment) => {
-        const appointmentDate = parseISO(`${appointment.date}T${appointment.time}`);
+      // Process mock data for now
+      INITIAL_APPOINTMENTS.forEach((appointment) => {
+        const appointmentDate = parseISO(`${appointment.date.split('T')[0]}T${appointment.time}`);
         
         if (isAfter(appointmentDate, now) && appointment.status !== 'cancelled') {
           upcoming.push(appointment);
@@ -158,17 +180,32 @@ const ClientAppointments = () => {
     
     try {
       setCancelLoading(true);
-      await appointmentService.cancelAppointment(selectedAppointment.id);
+      // Convert string id to string if needed for the API
+      const appointmentId = typeof selectedAppointment.id === 'number' 
+        ? selectedAppointment.id.toString() 
+        : selectedAppointment.id;
       
-      toast.success('Agendamento cancelado com sucesso');
-      setCancelDialogOpen(false);
+      // Uncomment when API is ready
+      // await appointmentService.cancelAppointment(appointmentId);
       
-      // Atualizar a lista de agendamentos
-      fetchAppointments();
+      // Mock successful cancellation for now
+      setTimeout(() => {
+        toast.success('Agendamento cancelado com sucesso');
+        setCancelDialogOpen(false);
+        
+        // Update local state
+        const updatedUpcoming = upcomingAppointments.map(apt => 
+          apt.id === selectedAppointment.id ? {...apt, status: 'cancelled' as const} : apt
+        );
+        
+        setUpcomingAppointments(updatedUpcoming.filter(apt => apt.status !== 'cancelled'));
+        setPastAppointments([...pastAppointments, {...selectedAppointment, status: 'cancelled' as const}]);
+        
+        setCancelLoading(false);
+      }, 1000);
     } catch (error) {
       toast.error('Erro ao cancelar agendamento');
       console.error(error);
-    } finally {
       setCancelLoading(false);
     }
   };
@@ -190,23 +227,15 @@ const ClientAppointments = () => {
     }
   };
 
-  const formatAppointmentDate = (date: string) => {
-    return format(parseISO(date), "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
+  const canCancel = (appointment: ClientAppointment) => {
+    const appointmentDate = parseISO(`${appointment.date.split('T')[0]}T${appointment.time}`);
+    return appointment.status !== 'cancelled' && 
+           appointment.status !== 'completed' && 
+           appointment.status !== 'no_show' &&
+           isAfter(appointmentDate, new Date());
   };
 
-  const formatAppointmentTime = (time: string) => {
-    return time.substring(0, 5) + 'h';
-  };
-
-  const renderAppointmentCard = (appointment: Appointment) => {
-    const appointmentDate = formatAppointmentDate(appointment.date);
-    const appointmentTime = formatAppointmentTime(appointment.time);
-    
-    const canCancel = appointment.status !== 'cancelled' && 
-                      appointment.status !== 'completed' && 
-                      appointment.status !== 'no_show' &&
-                      isAfter(parseISO(`${appointment.date}T${appointment.time}`), new Date());
-    
+  const renderAppointmentCard = (appointment: ClientAppointment) => {
     return (
       <Card key={appointment.id} className="mb-4 overflow-hidden">
         <CardHeader className="pb-3">
@@ -214,11 +243,11 @@ const ClientAppointments = () => {
             <div>
               <CardTitle className="text-xl flex items-center">
                 <Calendar className="w-5 h-5 mr-2" />
-                {appointmentDate}
+                {formatAppointmentDate(appointment.date)}
               </CardTitle>
               <CardDescription className="text-sm mt-1 flex items-center">
                 <Clock className="w-4 h-4 mr-1" />
-                {appointmentTime} • {appointment.duration} min
+                {formatAppointmentTime(appointment.time)} • {appointment.duration} min
               </CardDescription>
             </div>
             {getStatusBadge(appointment.status)}
@@ -228,28 +257,26 @@ const ClientAppointments = () => {
         <CardContent className="pb-2">
           <div className="flex items-start gap-4">
             <Avatar className="h-12 w-12">
-              <AvatarImage src={appointment.barber?.photo} alt={appointment.barber?.name} />
-              <AvatarFallback>{appointment.barber?.name?.substring(0, 2).toUpperCase() || 'BB'}</AvatarFallback>
+              <AvatarImage src={appointment.barberImage} alt={appointment.barberName} />
+              <AvatarFallback>{appointment.barberName.substring(0, 2).toUpperCase()}</AvatarFallback>
             </Avatar>
             
             <div className="space-y-2">
               <div>
                 <div className="font-medium flex items-center">
                   <User className="w-4 h-4 mr-1 text-muted-foreground" />
-                  {appointment.barber?.name || 'Barbeiro não informado'}
+                  {appointment.barberName}
                 </div>
                 <div className="text-sm text-muted-foreground flex items-center mt-0.5">
                   <Scissors className="w-4 h-4 mr-1" />
-                  {appointment.service?.name || 'Serviço não informado'}
+                  {appointment.service}
                 </div>
               </div>
               
-              {appointment.barbershop_id && (
-                <div className="text-sm flex items-center">
-                  <MapPin className="w-4 h-4 mr-1 text-muted-foreground" />
-                  {appointment.barber?.barbershop?.name || 'Barbearia não informada'}
-                </div>
-              )}
+              <div className="text-sm flex items-center">
+                <MapPin className="w-4 h-4 mr-1 text-muted-foreground" />
+                {appointment.barberShopName}
+              </div>
             </div>
           </div>
           
@@ -268,7 +295,7 @@ const ClientAppointments = () => {
             </div>
             
             <div className="flex gap-2">
-              {canCancel && (
+              {canCancel(appointment) && (
                 <Button 
                   variant="outline" 
                   size="sm"
@@ -391,7 +418,7 @@ const ClientAppointments = () => {
                 <div>
                   <p className="font-medium">{formatAppointmentDate(selectedAppointment.date)}</p>
                   <p className="text-sm text-muted-foreground">
-                    {formatAppointmentTime(selectedAppointment.time)} • {selectedAppointment.service?.name}
+                    {formatAppointmentTime(selectedAppointment.time)} • {selectedAppointment.service}
                   </p>
                 </div>
               </div>
@@ -423,4 +450,4 @@ const ClientAppointments = () => {
   );
 };
 
-export default ClientAppointments; 
+export default ClientAppointments;

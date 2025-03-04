@@ -1,3 +1,4 @@
+
 import { Scissors, Star } from "lucide-react";
 import { animationClasses } from "@/lib/animations";
 
@@ -15,9 +16,10 @@ const getDelayClass = (delay: number): string => {
   if (delay === 0) return animationClasses.fadeIn;
   if (delay <= 100) return animationClasses.fadeInDelay100;
   if (delay <= 200) return animationClasses.fadeInDelay200;
-  if (delay <= 300) return animationClasses.fadeInDelay300;
-  if (delay <= 400) return animationClasses.fadeInDelay400;
-  return animationClasses.fadeInDelay500;
+  // Use apenas as classes disponíveis em animationClasses
+  if (delay <= 300) return animationClasses.fadeInDelay200;
+  if (delay <= 400) return animationClasses.fadeInDelay200;
+  return animationClasses.fadeInDelay200;
 };
 
 export function BarberCard({ 

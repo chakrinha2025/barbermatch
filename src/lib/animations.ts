@@ -1,5 +1,5 @@
+
 import { useEffect, useState } from 'react';
-import { keyframes } from 'tailwindcss/lib/util/flattenColorPalette';
 
 // Animation variants for staggered animations
 export const staggeredFadeIn = (delay: number = 0) => ({
@@ -83,6 +83,9 @@ export const animationClasses = {
   fadeIn: 'animate-fadeIn',
   fadeInDelay100: 'animate-fadeInDelay100',
   fadeInDelay200: 'animate-fadeInDelay200',
+  fadeInDelay300: 'animate-fadeInDelay300', // Added missing class
+  fadeInDelay400: 'animate-fadeInDelay400', // Added missing class
+  fadeInDelay500: 'animate-fadeInDelay500', // Added missing class
   fadeInUp: 'animate-fadeInUp',
   fadeInDown: 'animate-fadeInDown',
   zoomIn: 'animate-zoomIn',
@@ -152,6 +155,9 @@ export const animations = {
     fadeIn: 'fadeIn 0.7s ease-in forwards',
     fadeInDelay100: 'fadeIn 0.7s ease-in 0.1s forwards',
     fadeInDelay200: 'fadeIn 0.7s ease-in 0.2s forwards',
+    fadeInDelay300: 'fadeIn 0.7s ease-in 0.3s forwards', // Added missing animation
+    fadeInDelay400: 'fadeIn 0.7s ease-in 0.4s forwards', // Added missing animation
+    fadeInDelay500: 'fadeIn 0.7s ease-in 0.5s forwards', // Added missing animation
     fadeInUp: 'fadeInUp 0.7s ease-out forwards',
     fadeInDown: 'fadeInDown 0.7s ease-out forwards',
     zoomIn: 'zoomIn 0.5s ease-out forwards',
@@ -185,5 +191,3 @@ export const calcWidthPercentage = (value: number, max: number): string => {
   const roundedPercentage = Math.round(percentage / 5) * 5;
   return `w-[${roundedPercentage}%]`;
 };
-
-// Adicionando keyframes animação de batimento cardíaco (heartbeat) no tailwind.config.ts
