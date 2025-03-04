@@ -1,6 +1,6 @@
 
 import { Scissors, Star } from "lucide-react";
-import { animationClasses } from "@/lib/animations";
+import { animationClasses, getDelayClass } from "@/lib/animations";
 
 interface BarberCardProps {
   name: string;
@@ -10,17 +10,6 @@ interface BarberCardProps {
   imageIndex: number;
   delay?: number;
 }
-
-// Função auxiliar para escolher a classe de delay com base no valor de delay
-const getDelayClass = (delay: number): string => {
-  if (delay === 0) return animationClasses.fadeIn;
-  if (delay <= 100) return animationClasses.fadeInDelay100;
-  if (delay <= 200) return animationClasses.fadeInDelay200;
-  if (delay <= 300) return animationClasses.fadeInDelay200; // Fallback to fadeInDelay200
-  if (delay <= 400) return animationClasses.fadeInDelay200; // Fallback to fadeInDelay200
-  // Use apenas as classes disponíveis em animationClasses
-  return animationClasses.fadeInDelay200;
-};
 
 export function BarberCard({ 
   name, 

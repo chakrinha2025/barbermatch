@@ -1,6 +1,6 @@
+
 import type { Config } from "tailwindcss";
 import plugin from "tailwindcss/plugin";
-import { animations } from './src/lib/animations';
 
 export default {
   darkMode: ["class"],
@@ -120,7 +120,6 @@ export default {
           from: { backgroundPosition: '200% 0' },
           to: { backgroundPosition: '-200% 0' },
         },
-        ...animations.keyframes,
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -132,11 +131,20 @@ export default {
         "slide-down": "slide-down 0.5s ease-out forwards",
         "slide-in-right": "slide-in-right 0.5s ease-out forwards",
         "slide-in-left": "slide-in-left 0.5s ease-out forwards",
+        "fadeInDelay100": "fade-in 0.5s ease-out 100ms forwards",
+        "fadeInDelay200": "fade-in 0.5s ease-out 200ms forwards",
+        "fadeInDelay300": "fade-in 0.5s ease-out 300ms forwards",
+        "fadeInDelay400": "fade-in 0.5s ease-out 400ms forwards",
+        "fadeInDelay500": "fade-in 0.5s ease-out 500ms forwards",
+        "fadeIn": "fade-in 0.5s ease-out forwards",
+        "fadeInUp": "fade-in 0.5s ease-out forwards",
+        "fadeInDown": "fade-in 0.5s ease-out forwards",
+        "zoomIn": "scale-in 0.5s ease-out forwards",
         float: "float 3s ease-in-out infinite",
         pulse: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-        heartbeat: "heartbeat 1.5s ease-in-out infinite",
+        bounce: "bounce 1s ease-in-out infinite",
         shimmer: "shimmer 2s infinite linear",
-        ...animations.animation,
+        heartbeat: "heartbeat 1.5s ease-in-out infinite",
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
@@ -148,10 +156,6 @@ export default {
         premium: "0 10px 30px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.06)",
         soft: "0 5px 15px rgba(0, 0, 0, 0.05)",
         "premium-hover": "0 15px 35px rgba(0, 0, 0, 0.12), 0 5px 15px rgba(0, 0, 0, 0.08)",
-        'premium': '0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01)',
-        'premium-dark': '0 10px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.2)',
-        'premium': '0 10px 30px -5px rgba(var(--primary-rgb), 0.15), 0 5px 15px -5px rgba(var(--primary-rgb), 0.2)',
-        'premium-hover': '0 20px 40px -5px rgba(var(--primary-rgb), 0.2), 0 10px 20px -5px rgba(var(--primary-rgb), 0.3)',
       },
       typography: {
         DEFAULT: {
