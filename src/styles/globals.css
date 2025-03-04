@@ -1,0 +1,378 @@
+/* Variáveis de cores para os cards */
+:root {
+  --purple-500: 139, 92, 246;
+  --blue-500: 59, 130, 246;
+  --indigo-500: 99, 102, 241;
+  --green-500: 34, 197, 94;
+  --amber-500: 245, 158, 11;
+  --cyan-500: 6, 182, 212;
+  --rose-500: 244, 63, 94;
+  --orange-500: 249, 115, 22;
+  --yellow-500: 234, 179, 8;
+  --emerald-500: 16, 185, 129;
+  --violet-500: 139, 92, 246;
+  --pink-500: 236, 72, 153;
+}
+
+/* Animações para blobs na página Home */
+@keyframes blob {
+  0% {
+    transform: scale(1);
+  }
+  33% {
+    transform: scale(1.1);
+  }
+  66% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.animate-blob {
+  animation: blob 7s infinite;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
+
+/* Classes para atrasos de animação */
+.animation-delay-100 {
+  animation-delay: 100ms;
+}
+
+.animation-delay-200 {
+  animation-delay: 200ms;
+}
+
+.animation-delay-300 {
+  animation-delay: 300ms;
+}
+
+.animation-delay-400 {
+  animation-delay: 400ms;
+}
+
+.animation-delay-500 {
+  animation-delay: 500ms;
+}
+
+.animation-delay-600 {
+  animation-delay: 600ms;
+}
+
+.animation-delay-700 {
+  animation-delay: 700ms;
+}
+
+.animation-delay-800 {
+  animation-delay: 800ms;
+}
+
+.animation-delay-900 {
+  animation-delay: 900ms;
+}
+
+.animation-delay-1000 {
+  animation-delay: 1000ms;
+}
+
+/* Classes utilitárias necessárias */
+.bg-pattern-dots {
+  background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='2' cy='2' r='1' fill='%23FFF' fill-opacity='0.3'/%3E%3C/svg%3E");
+  background-size: 20px 20px;
+}
+
+/* Classes de layout para Download.tsx */
+.container-tight {
+  width: 100%;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.section-padding {
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+}
+
+/* Classes de tipografia */
+.heading-2 {
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.sub-heading {
+  color: hsl(var(--muted-foreground));
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
+
+/* Classes para componentes de cartões */
+.glass {
+  background: rgba(255, 255, 255, 0.05);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Correção para classes de altura percentual */
+.h-30\% {
+  height: 30%;
+}
+
+.h-40\% {
+  height: 40%;
+}
+
+.h-50\% {
+  height: 50%;
+}
+
+.h-60\% {
+  height: 60%;
+}
+
+.h-70\% {
+  height: 70%;
+}
+
+.h-75\% {
+  height: 75%;
+}
+
+.h-80\% {
+  height: 80%;
+}
+
+.h-85\% {
+  height: 85%;
+}
+
+.h-90\% {
+  height: 90%;
+}
+
+.h-95\% {
+  height: 95%;
+}
+
+/* Classes para substituir estilos inline */
+.width-fixed {
+  width: 100%;
+}
+
+.width-dynamic-30 {
+  width: 30%;
+}
+
+.width-dynamic-40 {
+  width: 40%;
+}
+
+.width-dynamic-50 {
+  width: 50%;
+}
+
+.width-dynamic-60 {
+  width: 60%;
+}
+
+.width-dynamic-70 {
+  width: 70%;
+}
+
+.width-dynamic-75 {
+  width: 75%;
+}
+
+.width-dynamic-80 {
+  width: 80%;
+}
+
+.width-dynamic-85 {
+  width: 85%;
+}
+
+.width-dynamic-90 {
+  width: 90%;
+}
+
+.width-dynamic-95 {
+  width: 95%;
+}
+
+/* Classes para barras de estatísticas */
+.stat-bar-base {
+  height: 8px;
+  border-radius: 9999px;
+  overflow: hidden;
+  background-color: rgba(209, 213, 219, 0.3);
+}
+
+.stat-bar-fill {
+  height: 100%;
+  border-radius: 9999px;
+}
+
+.stat-bar-fill-green {
+  background-color: rgb(34, 197, 94);
+}
+
+.stat-bar-fill-yellow {
+  background-color: rgb(234, 179, 8);
+}
+
+.stat-bar-fill-purple {
+  background-color: rgb(168, 85, 247);
+}
+
+.stat-bar-fill-blue {
+  background-color: rgb(59, 130, 246);
+}
+
+/* Classes para badges e indicadores */
+.percentage-indicator {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.percentage-indicator-positive {
+  background-color: rgba(34, 197, 94, 0.1);
+  color: rgb(34, 197, 94);
+}
+
+.percentage-indicator-negative {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: rgb(239, 68, 68);
+}
+
+/* Classes para gradientes e fundos */
+.gradient-primary {
+  background: linear-gradient(to right, var(--color-primary), var(--color-primary-dark));
+}
+
+.gradient-secondary {
+  background: linear-gradient(to right, var(--color-secondary), var(--color-secondary-dark));
+}
+
+.pattern-overlay {
+  background-image: url("data:image/svg+xml,%3Csvg width='30' height='30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M15 0C6.716 0 0 6.716 0 15c0 8.284 6.716 15 15 15 8.284 0 15-6.716 15-15 0-8.284-6.716-15-15-15zm0 2c7.18 0 13 5.82 13 13s-5.82 13-13 13S2 22.18 2 15 7.82 2 15 2z' fill-opacity='.05' fill-rule='nonzero'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 30px 30px;
+}
+
+/* Classes para elementos específicos */
+.cookie-consent-wrapper {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1rem;
+  z-index: 50;
+  background-color: white;
+  box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.download-app-banner {
+  padding: 1rem;
+  border-radius: 0.75rem;
+  background-color: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+/* Classes para melhorar a responsividade */
+.responsive-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+@media (max-width: 640px) {
+  .responsive-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Classes utilitárias para componentes */
+.interactive-card {
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.interactive-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+/* Animações para destaque de elementos */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse 3s infinite;
+}
+
+/* Animação para flutuação suave de cards */
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Animação para brilho de cards */
+@keyframes shine {
+  0% {
+    background-position: 200% center;
+  }
+  100% {
+    background-position: -200% center;
+  }
+}
+
+.animate-shine {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.2) 25%,
+    rgba(255, 255, 255, 0.2) 75%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-size: 200% 100%;
+  animation: shine 3s linear infinite;
+} 

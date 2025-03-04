@@ -1,5 +1,6 @@
 import type { Config } from "tailwindcss";
 import plugin from "tailwindcss/plugin";
+import { animations } from './src/lib/animations';
 
 export default {
   darkMode: ["class"],
@@ -115,6 +116,11 @@ export default {
           "42%": { transform: "scale(1.3)" },
           "70%": { transform: "scale(1)" },
         },
+        shimmer: {
+          from: { backgroundPosition: '200% 0' },
+          to: { backgroundPosition: '-200% 0' },
+        },
+        ...animations.keyframes,
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -129,9 +135,13 @@ export default {
         float: "float 3s ease-in-out infinite",
         pulse: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
         heartbeat: "heartbeat 1.5s ease-in-out infinite",
+        shimmer: "shimmer 2s infinite linear",
+        ...animations.animation,
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+        'hero-pattern': 'url("/images/hero-pattern.png")',
+        'dots-pattern': 'url("data:image/svg+xml,%3Csvg width="20" height="20" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath d="M1 1h2v2H1V1zm4 0h2v2H5V1zm4 0h2v2H9V1zm4 0h2v2h-2V1zm4 0h2v2h-2V1zM1 5h2v2H1V5zm4 0h2v2H5V5zm4 0h2v2H9V5zm4 0h2v2h-2V5zm4 0h2v2h-2V5zM1 9h2v2H1V9zm4 0h2v2H5V9zm4 0h2v2H9V9zm4 0h2v2h-2V9zm4 0h2v2h-2V9zM1 13h2v2H1v-2zm4 0h2v2H5v-2zm4 0h2v2H9v-2zm4 0h2v2h-2v-2zm4 0h2v2h-2v-2zM1 17h2v2H1v-2zm4 0h2v2H5v-2zm4 0h2v2H9v-2zm4 0h2v2h-2v-2zm4 0h2v2h-2v-2z" fill="currentColor" fill-opacity="0.05" fill-rule="evenodd"/%3E%3C/svg%3E")',
       },
       boxShadow: {
         glass: "0 4px 30px rgba(0, 0, 0, 0.1)",
@@ -140,6 +150,8 @@ export default {
         "premium-hover": "0 15px 35px rgba(0, 0, 0, 0.12), 0 5px 15px rgba(0, 0, 0, 0.08)",
         'premium': '0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01)',
         'premium-dark': '0 10px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.2)',
+        'premium': '0 10px 30px -5px rgba(var(--primary-rgb), 0.15), 0 5px 15px -5px rgba(var(--primary-rgb), 0.2)',
+        'premium-hover': '0 20px 40px -5px rgba(var(--primary-rgb), 0.2), 0 10px 20px -5px rgba(var(--primary-rgb), 0.3)',
       },
       typography: {
         DEFAULT: {
