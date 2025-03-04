@@ -30,16 +30,16 @@ export function AnimatedCard({
     const cardCenterX = rect.left + rect.width / 2;
     const cardCenterY = rect.top + rect.height / 2;
     
-    // Calculate rotation based on mouse position (max ±15 degrees)
-    const rotateYValue = ((e.clientX - cardCenterX) / (rect.width / 2)) * 10;
-    const rotateXValue = ((e.clientY - cardCenterY) / (rect.height / 2)) * 10;
+    // Calculate rotation based on mouse position (reduced from 15 to 8 degrees for smoother movement)
+    const rotateYValue = ((e.clientX - cardCenterX) / (rect.width / 2)) * 8;
+    const rotateXValue = ((e.clientY - cardCenterY) / (rect.height / 2)) * 8;
     
     setRotateX(-rotateXValue);
     setRotateY(rotateYValue);
   };
   
   const handleMouseEnter = () => {
-    setScale(1.05);
+    setScale(1.03); // Reduced scale for smoother animation
   };
   
   const handleMouseLeave = () => {
@@ -59,15 +59,17 @@ export function AnimatedCard({
         perspective: "1000px",
         transformStyle: "preserve-3d"
       }}
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 10 }}
       animate={{ 
         opacity: 1, 
         y: 0,
         transition: { 
-          delay: delay * 0.1,
-          duration: 0.5
+          delay: delay,
+          duration: 0.3 // Faster animation
         }
       }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
     >
       <motion.div
         className="relative z-10 w-full h-full"
@@ -78,8 +80,8 @@ export function AnimatedCard({
         }}
         transition={{
           type: "spring",
-          stiffness: 300,
-          damping: 15
+          stiffness: 400, // Higher stiffness for faster response
+          damping: 20
         }}
         style={{
           transformStyle: "preserve-3d",
@@ -87,7 +89,7 @@ export function AnimatedCard({
         }}
       >
         <div 
-          className="relative z-10 w-full h-full"
+          className="relative z-10 w-full h-full group"
           style={{
             transformStyle: "preserve-3d"
           }}

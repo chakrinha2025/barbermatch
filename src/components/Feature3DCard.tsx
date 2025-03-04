@@ -1,7 +1,6 @@
 
 import React from 'react';
 import AnimatedCard from './AnimatedCard';
-import { LucideIcon } from 'lucide-react';
 
 interface Feature3DCardProps {
   title: string;
@@ -34,7 +33,7 @@ export function Feature3DCard({
   return (
     <AnimatedCard 
       backgroundColor={cardColor}
-      delay={delay}
+      delay={delay / 10} // Reducing the delay to make cards appear faster
       className={`h-full ${className}`}
     >
       <div className="p-6 h-full flex flex-col">
