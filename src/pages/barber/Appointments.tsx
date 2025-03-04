@@ -14,8 +14,22 @@ import {
   Search
 } from 'lucide-react';
 
+// Interface for appointment type with proper status typing
+interface Appointment {
+  id: number;
+  clientName: string;
+  clientPhone: string;
+  service: string;
+  date: string;
+  time: string;
+  duration: number;
+  status: 'confirmed' | 'pending' | 'cancelled';
+  price: number;
+  notes: string;
+}
+
 // Dados simulados - em produção viriam de uma API
-const INITIAL_APPOINTMENTS = [
+const INITIAL_APPOINTMENTS: Appointment[] = [
   {
     id: 1,
     clientName: 'João Silva',
@@ -78,33 +92,16 @@ const INITIAL_APPOINTMENTS = [
   },
 ];
 
-// Interface para o tipo de agendamento
-interface Appointment {
-  id: number;
-  clientName: string;
-  clientPhone: string;
-  service: string;
-  date: string;
-  time: string;
-  duration: number;
-  status: 'confirmed' | 'pending' | 'cancelled';
-  price: number;
-  notes: string;
-}
-
 const Appointments = () => {
   const [appointments, setAppointments] = useState<Appointment[]>(INITIAL_APPOINTMENTS);
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [searchQuery, setSearchQuery] = useState('');
   const [detailedAppointment, setDetailedAppointment] = useState<Appointment | null>(null);
   
-  // Obter a data atual no formato YYYY-MM-DD
   const today = new Date().toISOString().split('T')[0];
   
-  // Se não houver data selecionada, usar a data de hoje
   const activeDate = selectedDate || today;
   
-  // Filtrar agendamentos com base na data selecionada e na busca
   const filteredAppointments = appointments.filter(appointment => {
     const matchesDate = appointment.date === activeDate;
     const matchesSearch = 
@@ -114,24 +111,20 @@ const Appointments = () => {
     return searchQuery ? matchesSearch : matchesDate;
   });
   
-  // Ordenar agendamentos por horário
   const sortedAppointments = [...filteredAppointments].sort((a, b) => {
     return a.time.localeCompare(b.time);
   });
   
-  // Formatar data para exibição
   const formatDate = (dateString: string) => {
     const [year, month, day] = dateString.split('-');
     return `${day}/${month}/${year}`;
   };
   
-  // Formatar data para exibição nos dias da semana
   const formatDateForWeekDay = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('pt-BR', { weekday: 'short', day: 'numeric' });
   };
   
-  // Obter dias da semana a partir da data atual
   const getWeekDays = () => {
     const days = [];
     const currentDate = new Date();
@@ -147,7 +140,6 @@ const Appointments = () => {
   
   const weekDays = getWeekDays();
   
-  // Navegar para a data anterior
   const goToPreviousDay = () => {
     const currentIndex = weekDays.indexOf(activeDate);
     if (currentIndex > 0) {
@@ -155,7 +147,6 @@ const Appointments = () => {
     }
   };
   
-  // Navegar para a próxima data
   const goToNextDay = () => {
     const currentIndex = weekDays.indexOf(activeDate);
     if (currentIndex < weekDays.length - 1) {
@@ -163,12 +154,10 @@ const Appointments = () => {
     }
   };
   
-  // Obter contagem de agendamentos por data
   const getAppointmentCountForDate = (date: string) => {
     return appointments.filter(a => a.date === date).length;
   };
   
-  // Obter classe de cor com base no status
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'confirmed':
@@ -182,7 +171,6 @@ const Appointments = () => {
     }
   };
   
-  // Obter ícone com base no status
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'confirmed':
@@ -196,7 +184,6 @@ const Appointments = () => {
     }
   };
   
-  // Obter label com base no status
   const getStatusLabel = (status: string) => {
     switch (status) {
       case 'confirmed':
@@ -210,7 +197,6 @@ const Appointments = () => {
     }
   };
   
-  // Mudar o status de um agendamento
   const changeAppointmentStatus = (id: number, newStatus: 'confirmed' | 'pending' | 'cancelled') => {
     setAppointments(appointments.map(appointment => 
       appointment.id === id 
@@ -223,12 +209,10 @@ const Appointments = () => {
     }
   };
   
-  // Mostrar detalhes de um agendamento
   const showAppointmentDetails = (appointment: Appointment) => {
     setDetailedAppointment(appointment);
   };
   
-  // Fechar detalhes de um agendamento
   const closeAppointmentDetails = () => {
     setDetailedAppointment(null);
   };
@@ -242,7 +226,6 @@ const Appointments = () => {
         </p>
       </div>
       
-      {/* Barra de busca */}
       <div className="relative">
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={18} />
         <input
@@ -254,7 +237,6 @@ const Appointments = () => {
         />
       </div>
       
-      {/* Seletor de data */}
       {!searchQuery && (
         <div className="border rounded-lg overflow-hidden">
           <div className="flex items-center justify-between bg-muted/30 px-4 py-2 border-b">
@@ -320,7 +302,6 @@ const Appointments = () => {
         </div>
       )}
       
-      {/* Lista de Agendamentos */}
       <div className="bg-card border rounded-lg overflow-hidden">
         {sortedAppointments.length > 0 ? (
           <div className="divide-y">
@@ -376,7 +357,6 @@ const Appointments = () => {
         )}
       </div>
       
-      {/* Modal de Detalhes do Agendamento */}
       {detailedAppointment && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-background rounded-lg w-full max-w-md max-h-[90vh] overflow-auto">
@@ -509,4 +489,4 @@ const Appointments = () => {
   );
 };
 
-export default Appointments; 
+export default Appointments;

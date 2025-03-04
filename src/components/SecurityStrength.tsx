@@ -1,3 +1,4 @@
+
 import React, { useMemo } from 'react';
 import { Lock, LucideIcon, ShieldAlert, ShieldCheck, ShieldX } from 'lucide-react';
 import { calcWidthPercentage } from '@/lib/animations';
@@ -97,7 +98,7 @@ export const SecurityStrength: React.FC<SecurityStrengthProps> = ({
           <div className="flex items-center">
             <span className="text-sm mr-3">{securityLevel.label}</span>
             <div className="w-32 h-2 bg-muted rounded-full overflow-hidden">
-              <div className={`h-full ${securityLevel.color} ${calcWidthPercentage(securityScore, 100)}`} />
+              <div className={`h-full ${securityLevel.color} ${calcWidthPercentage(securityScore)}`} />
             </div>
           </div>
         )}
@@ -149,4 +150,4 @@ export const SecurityStrength: React.FC<SecurityStrengthProps> = ({
   );
 };
 
-export default SecurityStrength; 
+export default SecurityStrength;
