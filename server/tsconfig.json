@@ -1,3 +1,4 @@
+
 {
   "compilerOptions": {
     "module": "commonjs",
@@ -20,4 +21,4 @@
     "noFallthroughCasesInSwitch": true,
     "strictPropertyInitialization": false
   }
-} 
+}

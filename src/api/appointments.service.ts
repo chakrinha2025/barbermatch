@@ -43,12 +43,6 @@ export interface Appointment {
     price: number;
     duration: number;
   };
-  // Client UI properties
-  barberName?: string;
-  barberShopName?: string;
-  barberPhone?: string;
-  address?: string;
-  barberImage?: string;
 }
 
 export interface BarberAvailability {

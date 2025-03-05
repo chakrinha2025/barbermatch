@@ -1,11 +1,17 @@
 import React, { useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { ChevronDown, Scissors, Calendar, TrendingUp, Store, ShieldCheck } from 'lucide-react';
+import { ChevronDown, Scissors, Calendar, TrendingUp, Store, ShieldCheck, Sparkles, MapPin } from 'lucide-react';
 import { AnimatedBg } from '@/components/ui/animated-bg';
 import { ParallaxSection } from '@/components/ui/parallax-section';
 import { MotionCard } from '@/components/ui/motion-card';
 import { useTheme } from 'next-themes';
+import HeroSection from '@/components/HeroSection';
+import { FeatureCard } from '@/components/FeatureCard';
+import { Feature3DCard } from '@/components/Feature3DCard';
+import { VirtualTryOnTool } from '@/components/VirtualTryOnTool';
+import { BarberCard } from '@/components/BarberCard';
 
 const Index = () => {
   const { scrollYProgress } = useScroll();
@@ -100,7 +106,6 @@ const Index = () => {
                 <Scissors className="w-12 h-12 md:w-16 md:h-16 text-white" />
               </div>
             </motion.div>
-
             <motion.h1 
               className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-500"
               variants={textVariants}

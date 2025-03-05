@@ -133,7 +133,7 @@ const AdminFinancial: React.FC = () => {
     }).format(amount);
   };
 
-  // Dados para o gráfico de receita mensal - Utilizando a interface correta do componente BarChart
+  // Dados para o gráfico de receita mensal - Usando o formato simplificado
   const monthlyRevenueData = [
     { label: 'Jan', value: 1200 },
     { label: 'Fev', value: 1500 },
@@ -143,7 +143,7 @@ const AdminFinancial: React.FC = () => {
     { label: 'Jun', value: 2600 }
   ];
 
-  // Dados para o gráfico de transações por tipo - Utilizando a interface correta do componente BarChart
+  // Dados para o gráfico de transações por tipo - Usando o formato simplificado
   const transactionTypeData = [
     { label: 'Receita', value: 2800 },
     { label: 'Comissões', value: 1520 },
@@ -330,4 +330,4 @@ const AdminFinancial: React.FC = () => {
   );
 };
 
-export default AdminFinancial; 
+export default AdminFinancial;

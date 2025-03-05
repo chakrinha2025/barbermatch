@@ -122,7 +122,7 @@ const convertApiToClientAppointment = (apiAppointment: any): ClientAppointment =
     date: apiAppointment.date,
     time: apiAppointment.time,
     duration: apiAppointment.duration,
-    status: apiAppointment.status,
+    status: apiAppointment.status as ClientAppointment['status'],
     price: apiAppointment.price || 0,
     address: apiAppointment.barber?.barbershop?.address || 'Endereço não informado',
     notes: apiAppointment.notes,
@@ -210,7 +210,7 @@ const ClientAppointments = () => {
     }
   };
 
-  const getStatusBadge = (status: string) => {
+  const getStatusBadge = (status: ClientAppointment['status']) => {
     switch (status) {
       case 'confirmed':
         return <Badge className="bg-green-500">Confirmado</Badge>;

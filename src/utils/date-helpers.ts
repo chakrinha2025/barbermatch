@@ -14,3 +14,8 @@ export const formatDate = (date: string): string => {
 export const formatTime = (time: string): string => {
   return time.substring(0, 5) + 'h';
 };
+
+// Get date from ISO string
+export const getDateFromISO = (isoString: string): Date => {
+  return parseISO(isoString);
+};

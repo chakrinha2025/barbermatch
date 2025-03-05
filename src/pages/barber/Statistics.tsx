@@ -23,7 +23,6 @@ import TrendCard from '@/components/TrendCard';
 import barberService, { BarberStatistics as StatisticsData } from '@/api/barber';
 import { useToast } from '@/components/ui/use-toast';
 
-// Opções para as estatísticas
 type TimePeriod = 'week' | 'month' | 'year';
 type ChartType = 'earnings' | 'clients' | 'services' | 'popular-times' | 'ratings';
 type ChartView = 'bar' | 'line';
@@ -46,12 +45,10 @@ const Statistics = () => {
 
   const { toast } = useToast();
   
-  // Carregar estatísticas ao inicializar e quando o período mudar
   useEffect(() => {
     loadStatistics();
   }, [timePeriod]);
 
-  // Carregar estatísticas da API
   const loadStatistics = async () => {
     try {
       setIsLoading(true);
@@ -68,31 +65,26 @@ const Statistics = () => {
       setIsLoading(false);
     }
   };
-  
-  // Formatar valores monetários
+
   const formatCurrency = (value: number) => {
     return `R$ ${value.toLocaleString('pt-BR')}`;
   };
-  
-  // Formatar valores percentuais
+
   const formatPercentage = (value: number) => {
     return `${value.toFixed(1)}%`;
   };
-  
-  // Alternar visibilidade de seções
+
   const toggleSection = (section: string) => {
     setShowSection(prev => ({
       ...prev,
       [section]: !prev[section]
     }));
   };
-  
-  // Alternar entre visualização de gráfico de barras ou linha
+
   const toggleChartView = () => {
     setChartView(prev => prev === 'bar' ? 'line' : 'bar');
   };
-  
-  // Obter performance com base no período selecionado
+
   const getPerformance = () => {
     if (!statistics) return null;
     
@@ -107,19 +99,15 @@ const Statistics = () => {
         return statistics.overview.monthly;
     }
   };
-  
-  // Exportar dados para CSV
+
   const handleExportData = async () => {
     if (!statistics) return;
     
     try {
       setIsExporting(true);
       
-      // Aqui seria a lógica para gerar e baixar o CSV
-      // Por enquanto, vamos apenas simular um atraso
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Simulação de download
       toast({
         title: 'Dados exportados',
         description: 'Os dados estatísticos foram exportados com sucesso.',
@@ -135,10 +123,9 @@ const Statistics = () => {
       setIsExporting(false);
     }
   };
-  
+
   const performance = getPerformance();
-  
-  // Obter dados de faturamento com base no período selecionado
+
   const getEarningsData = () => {
     if (!statistics) return [];
     
@@ -153,7 +140,6 @@ const Statistics = () => {
     }
   };
 
-  // Renderizar o conteúdo baseado no estado de carregamento
   const renderContent = () => {
     if (isLoading) {
       return (
@@ -184,7 +170,6 @@ const Statistics = () => {
 
     return (
       <>
-        {/* Cartões de Visão Geral */}
         <div className="rounded-lg border bg-card">
           <div 
             className="flex items-center justify-between px-4 py-3 border-b cursor-pointer hover:bg-muted/30"
@@ -249,7 +234,6 @@ const Statistics = () => {
           )}
         </div>
 
-        {/* Cartões de Tendências */}
         <div className="rounded-lg border bg-card">
           <div 
             className="flex items-center justify-between px-4 py-3 border-b cursor-pointer hover:bg-muted/30"
@@ -303,7 +287,6 @@ const Statistics = () => {
           )}
         </div>
         
-        {/* Gráfico de Receitas */}
         <div className="rounded-lg border bg-card">
           <div 
             className="flex items-center justify-between px-4 py-3 border-b cursor-pointer hover:bg-muted/30"
@@ -340,7 +323,6 @@ const Statistics = () => {
           )}
         </div>
         
-        {/* Gráfico de Clientes */}
         <div className="rounded-lg border bg-card">
           <div 
             className="flex items-center justify-between px-4 py-3 border-b cursor-pointer hover:bg-muted/30"
@@ -375,7 +357,6 @@ const Statistics = () => {
           )}
         </div>
         
-        {/* Distribuição de Serviços */}
         <div className="rounded-lg border bg-card">
           <div 
             className="flex items-center justify-between px-4 py-3 border-b cursor-pointer hover:bg-muted/30"
@@ -400,7 +381,6 @@ const Statistics = () => {
           )}
         </div>
         
-        {/* Horários Populares */}
         <div className="rounded-lg border bg-card">
           <div 
             className="flex items-center justify-between px-4 py-3 border-b cursor-pointer hover:bg-muted/30"
@@ -425,7 +405,6 @@ const Statistics = () => {
           )}
         </div>
         
-        {/* Distribuição de Avaliações */}
         <div className="rounded-lg border bg-card">
           <div 
             className="flex items-center justify-between px-4 py-3 border-b cursor-pointer hover:bg-muted/30"
@@ -452,7 +431,7 @@ const Statistics = () => {
       </>
     );
   };
-  
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -533,4 +512,4 @@ const Statistics = () => {
   );
 };
 
-export default Statistics; 
+export default Statistics;

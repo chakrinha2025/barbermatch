@@ -1,91 +1,12 @@
 
-import { useEffect, useState } from 'react';
-
-// Animation variants for staggered animations
-export const staggeredFadeIn = (delay: number = 0) => ({
-  hidden: { opacity: 0, y: 10 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      delay,
-      duration: 0.5,
-      ease: [0.22, 1, 0.36, 1],
-    },
-  },
-});
-
-export const slideUp = (delay: number = 0) => ({
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      delay,
-      duration: 0.6,
-      ease: [0.22, 1, 0.36, 1],
-    },
-  },
-});
-
-export const fadeIn = (delay: number = 0) => ({
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      delay,
-      duration: 0.5,
-      ease: [0.22, 1, 0.36, 1],
-    },
-  },
-});
-
-export const scaleIn = (delay: number = 0) => ({
-  hidden: { opacity: 0, scale: 0.95 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    transition: {
-      delay,
-      duration: 0.5,
-      ease: [0.22, 1, 0.36, 1],
-    },
-  },
-});
-
-// Custom hook for detecting when element is in viewport
-export function useInView() {
-  const [ref, setRef] = useState<HTMLElement | null>(null);
-  const [isInView, setIsInView] = useState(false);
-
-  useEffect(() => {
-    if (!ref) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsInView(entry.isIntersecting);
-      },
-      { threshold: 0.1 }
-    );
-
-    observer.observe(ref);
-
-    return () => {
-      observer.disconnect();
-    };
-  }, [ref]);
-
-  return { ref: setRef, isInView };
-}
-
-// Animation classes for elements
+// Define animation classes for reuse throughout the application
 export const animationClasses = {
   fadeIn: 'animate-fadeIn',
   fadeInDelay100: 'animate-fadeInDelay100',
   fadeInDelay200: 'animate-fadeInDelay200',
-  fadeInDelay300: 'animate-fadeInDelay300', // Added missing class
-  fadeInDelay400: 'animate-fadeInDelay400', // Added missing class
-  fadeInDelay500: 'animate-fadeInDelay500', // Added missing class
+  fadeInDelay300: 'animate-fadeInDelay300',
+  fadeInDelay400: 'animate-fadeInDelay400',
+  fadeInDelay500: 'animate-fadeInDelay500',
   fadeInUp: 'animate-fadeInUp',
   fadeInDown: 'animate-fadeInDown',
   zoomIn: 'animate-zoomIn',
@@ -94,100 +15,95 @@ export const animationClasses = {
   bounce: 'animate-bounce',
   float: 'animate-float',
   shimmer: 'animate-shimmer',
-  slideUp: 'animate-slide-up',
-  slideDown: 'animate-slide-down',
-  slideInRight: 'animate-slide-in-right',
-  slideInLeft: 'animate-slide-in-left',
+  slideInLeft: 'animate-slideInLeft',
+  slideInRight: 'animate-slideInRight',
+  slideInDown: 'animate-slideInDown',
+  slideInUp: 'animate-slideInUp',
   heartbeat: 'animate-heartbeat',
+  tiltLeft: 'animate-tiltLeft',
+  tiltRight: 'animate-tiltRight',
+  rotate3D: 'animate-rotate3D',
+  float3D: 'animate-float3D',
 };
 
-// Keyframes para animações personalizadas
-export const customKeyframes = {
-  fadeIn: {
-    '0%': { opacity: '0' },
-    '100%': { opacity: '1' },
-  },
-  fadeInUp: {
-    '0%': { opacity: '0', transform: 'translateY(20px)' },
-    '100%': { opacity: '1', transform: 'translateY(0)' },
-  },
-  fadeInDown: {
-    '0%': { opacity: '0', transform: 'translateY(-20px)' },
-    '100%': { opacity: '1', transform: 'translateY(0)' },
-  },
-  zoomIn: {
-    '0%': { opacity: '0', transform: 'scale(0.95)' },
-    '100%': { opacity: '1', transform: 'scale(1)' },
-  },
-  float: {
-    '0%': { transform: 'translateY(0px)' },
-    '50%': { transform: 'translateY(-10px)' },
-    '100%': { transform: 'translateY(0px)' },
-  },
-  shimmer: {
-    '0%': { transform: 'translateX(-100%)' },
-    '100%': { transform: 'translateX(100%)' },
-  },
-  // Novas animações para os cartões de recursos
-  fadeInUp1: {
-    '0%': { opacity: '0', transform: 'translateY(30px)' },
-    '100%': { opacity: '1', transform: 'translateY(0)' },
-  },
-  fadeInUp2: {
-    '0%': { opacity: '0', transform: 'translateY(40px)' },
-    '100%': { opacity: '1', transform: 'translateY(0)' },
-  },
-  fadeInUp3: {
-    '0%': { opacity: '0', transform: 'translateY(50px)' },
-    '100%': { opacity: '1', transform: 'translateY(0)' },
-  },
-  pulseGlow: {
-    '0%': { boxShadow: '0 0 0 0 rgba(var(--primary-rgb), 0.4)' },
-    '70%': { boxShadow: '0 0 0 15px rgba(var(--primary-rgb), 0)' },
-    '100%': { boxShadow: '0 0 0 0 rgba(var(--primary-rgb), 0)' },
-  }
+// Utility functions for working with widths and heights
+/**
+ * Calculate width percentage for progress bars and other elements
+ * Accepts either a single percentage value or a value and max to calculate percentage
+ * @param valueOrPercentage - Either the direct percentage or the current value
+ * @param max - Optional maximum value to calculate percentage
+ * @returns CSS width class string
+ */
+export const calcWidthPercentage = (valueOrPercentage: number, max?: number): string => {
+  // If max is provided, calculate percentage
+  const percentage = max !== undefined ? (valueOrPercentage / max) * 100 : valueOrPercentage;
+  
+  // Ensure percentage is between 0 and 100
+  const clampedPercentage = Math.min(Math.max(percentage, 0), 100);
+  
+  // Round to nearest 5% for cleaner CSS classes
+  const roundedPercentage = Math.round(clampedPercentage / 5) * 5;
+  
+  return `w-[${roundedPercentage}%]`;
 };
 
-// Configurações de animações para o Tailwind
-export const animations = {
-  keyframes: customKeyframes,
-  animation: {
-    fadeIn: 'fadeIn 0.7s ease-in forwards',
-    fadeInDelay100: 'fadeIn 0.7s ease-in 0.1s forwards',
-    fadeInDelay200: 'fadeIn 0.7s ease-in 0.2s forwards',
-    fadeInDelay300: 'fadeIn 0.7s ease-in 0.3s forwards', // Added missing animation
-    fadeInDelay400: 'fadeIn 0.7s ease-in 0.4s forwards', // Added missing animation
-    fadeInDelay500: 'fadeIn 0.7s ease-in 0.5s forwards', // Added missing animation
-    fadeInUp: 'fadeInUp 0.7s ease-out forwards',
-    fadeInDown: 'fadeInDown 0.7s ease-out forwards',
-    zoomIn: 'zoomIn 0.5s ease-out forwards',
-    float: 'float 3s ease-in-out infinite',
-    shimmer: 'shimmer 2s infinite linear',
-    // Novas animações para os cartões de recursos
-    'fade-in-up-1': 'fadeInUp1 0.6s ease-out forwards',
-    'fade-in-up-2': 'fadeInUp2 0.8s ease-out 0.1s forwards',
-    'fade-in-up-3': 'fadeInUp3 1s ease-out 0.2s forwards',
-    'pulse-glow': 'pulseGlow 2s infinite',
-  },
-};
-
-// Função para gerar classes de porcentagem de largura (para barras de progresso)
 export const getWidthClass = (percentage: number): string => {
-  // Arredondar para o valor mais próximo de 5% para otimizar
-  const roundedPercentage = Math.round(percentage / 5) * 5;
-  return `w-[${roundedPercentage}%]`;
+  if (percentage <= 25) return 'w-1/4';
+  if (percentage <= 33) return 'w-1/3';
+  if (percentage <= 50) return 'w-1/2';
+  if (percentage <= 66) return 'w-2/3';
+  if (percentage <= 75) return 'w-3/4';
+  return 'w-full';
 };
 
-// Função para gerar classes de porcentagem de altura
 export const getHeightClass = (percentage: number): string => {
-  // Arredondar para o valor mais próximo de 5% para otimizar
-  const roundedPercentage = Math.round(percentage / 5) * 5;
-  return `h-[${roundedPercentage}%]`;
+  if (percentage <= 25) return 'h-1/4';
+  if (percentage <= 33) return 'h-1/3';
+  if (percentage <= 50) return 'h-1/2';
+  if (percentage <= 66) return 'h-2/3';
+  if (percentage <= 75) return 'h-3/4';
+  return 'h-full';
 };
 
-// Função para calcular classes de largura baseadas em um valor e um máximo
-export const calcWidthPercentage = (value: number, max: number): string => {
-  const percentage = Math.min(100, Math.max(0, (value / max) * 100));
-  const roundedPercentage = Math.round(percentage / 5) * 5;
-  return `w-[${roundedPercentage}%]`;
+// Helper function to choose an animation delay class based on input value
+export const getDelayClass = (delay: number): string => {
+  if (delay === 0) return animationClasses.fadeIn;
+  if (delay <= 100) return animationClasses.fadeInDelay100;
+  if (delay <= 200) return animationClasses.fadeInDelay200;
+  if (delay <= 300) return animationClasses.fadeInDelay300;
+  if (delay <= 400) return animationClasses.fadeInDelay400;
+  if (delay <= 500) return animationClasses.fadeInDelay500;
+  return animationClasses.fadeInDelay500;
+};
+
+/**
+ * Generate a 3D transform string for creating perspective effects
+ * @param rotateX - X-axis rotation in degrees
+ * @param rotateY - Y-axis rotation in degrees
+ * @param rotateZ - Z-axis rotation in degrees
+ * @param translateZ - Z-axis translation in pixels
+ * @returns CSS transform string
+ */
+export const generate3DTransform = (
+  rotateX = 0, 
+  rotateY = 0, 
+  rotateZ = 0, 
+  translateZ = 0
+): string => {
+  return `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) rotateZ(${rotateZ}deg) translateZ(${translateZ}px)`;
+};
+
+/**
+ * Generate a gradient background with appropriate contrasting text color
+ * @param startColor - Starting color of gradient (hex code)
+ * @param endColor - Ending color of gradient (hex code)
+ * @param direction - Direction of gradient (e.g., 'to right', 'to bottom')
+ * @returns CSS classes for background and text color
+ */
+export const generateGradientClasses = (
+  startColor: string, 
+  endColor: string, 
+  direction = 'to right'
+): string => {
+  return `bg-gradient-[${direction},${startColor},${endColor}]`;
 };
