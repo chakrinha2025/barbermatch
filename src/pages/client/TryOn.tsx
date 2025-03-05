@@ -1,88 +1,27 @@
 import { useState, useRef, useEffect } from 'react';
-import { Camera, Upload, RotateCcw, Download, Scissors, Heart, Share2, Grid3X3, X, Filter, Sparkles, Info, AlertCircle } from 'lucide-react';
+import { Camera, Upload, RotateCcw, Download, Scissors, Heart, Share2, Grid3X3, X, Filter, Sparkles, Info, AlertCircle, Check, ChevronRight, User, ThumbsDown, Shuffle, ThumbsUp, Clock, Save, RefreshCw, Loader2 } from 'lucide-react';
 import { calcWidthPercentage } from '@/lib/animations';
+import { apiService } from '@/api/api.service';
+import { arService, Hairstyle, VirtualTryOn } from '@/api/ar.service';
+import { faceRecognition, FaceDetectionResult } from '@/lib/ar/FaceRecognition';
+import { toast } from 'sonner';
+import { useAuth } from '@/contexts/AuthContext';
+import { motion, AnimatePresence } from 'framer-motion';
 
-// Tipos
-interface HairstyleOption {
-  id: number;
-  name: string;
-  image: string;
-  category: 'corte' | 'barba';
-  popular: boolean;
-  new: boolean;
-}
+import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Input } from '@/components/ui/input';
+import { Separator } from '@/components/ui/separator';
+import { Progress } from '@/components/ui/progress';
+import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { supabase } from '@/api/supabase-client';
 
-// Dados mockados
-const HAIRSTYLE_OPTIONS: HairstyleOption[] = [
-  {
-    id: 1,
-    name: "Degradê Clássico",
-    image: "https://images.unsplash.com/photo-1503443207922-dff7d543fd0e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
-    category: 'corte',
-    popular: true,
-    new: false
-  },
-  {
-    id: 2,
-    name: "Undercut Moderno",
-    image: "https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
-    category: 'corte',
-    popular: true,
-    new: false
-  },
-  {
-    id: 3,
-    name: "Pompadour",
-    image: "https://images.unsplash.com/photo-1520975954732-35dd22299614?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
-    category: 'corte',
-    popular: false,
-    new: true
-  },
-  {
-    id: 4,
-    name: "Corte Militar",
-    image: "https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
-    category: 'corte',
-    popular: false,
-    new: false
-  },
-  {
-    id: 5,
-    name: "Barba Cheia",
-    image: "https://images.unsplash.com/photo-1592647420148-bfcc177e2117?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
-    category: 'barba',
-    popular: true,
-    new: false
-  },
-  {
-    id: 6,
-    name: "Barba Curta Aparada",
-    image: "https://images.unsplash.com/photo-1473172707857-f9e276582ab6?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
-    category: 'barba',
-    popular: true,
-    new: false
-  },
-  {
-    id: 7,
-    name: "Barba Estilo Lenhador",
-    image: "https://images.unsplash.com/photo-1552822468-6c14fb04c8e4?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
-    category: 'barba',
-    popular: false,
-    new: false
-  },
-  {
-    id: 8,
-    name: "Cavanhaque Moderno",
-    image: "https://images.unsplash.com/photo-1621605810052-80936654d313?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
-    category: 'barba',
-    popular: false,
-    new: true
-  }
-];
-
+// Componente principal
 const TryOn = () => {
+  // Estados para gerenciar a aplicação
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
-  const [selectedHairstyle, setSelectedHairstyle] = useState<HairstyleOption | null>(null);
+  const [selectedHairstyle, setSelectedHairstyle] = useState<Hairstyle | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [resultImage, setResultImage] = useState<string | null>(null);
   const [showCamera, setShowCamera] = useState(false);
@@ -90,16 +29,57 @@ const TryOn = () => {
   const [showInfoModal, setShowInfoModal] = useState(false);
   const [showProcessingStatus, setShowProcessingStatus] = useState(false);
   const [processingProgress, setProcessingProgress] = useState(0);
+  const [faceDetection, setFaceDetection] = useState<FaceDetectionResult | null>(null);
+  const [hairstyles, setHairstyles] = useState<Hairstyle[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [faceShape, setFaceShape] = useState<string | null>(null);
+  const [recommendedStyles, setRecommendedStyles] = useState<Hairstyle[]>([]);
+  const [savedTryOns, setSavedTryOns] = useState<any[]>([]);
+  const [showSavedTryOns, setShowSavedTryOns] = useState(false);
+  const [isSavingTryOn, setIsSavingTryOn] = useState(false);
+  const [tryOnFeedback, setTryOnFeedback] = useState<'liked' | 'disliked' | 'neutral' | null>(null);
+  const { user } = useAuth();
 
+  // Referências para os elementos DOM
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const resultCanvasRef = useRef<HTMLCanvasElement>(null);
 
   // Filtra os estilos com base no filtro atual
-  const filteredStyles = HAIRSTYLE_OPTIONS.filter(style => {
+  const filteredStyles = hairstyles.filter(style => {
     if (filter === 'all') return true;
     return style.category === filter;
   });
+
+  // Carregamento inicial dos estilos e modelos de IA
+  useEffect(() => {
+    const initializeApp = async () => {
+      try {
+        // Carregar modelos de reconhecimento facial
+        await faceRecognition.loadModels();
+        
+        // Buscar estilos de corte do Supabase
+        const hairstylesData = await arService.getAllHairstyles();
+        setHairstyles(hairstylesData);
+        
+        // Buscar experimentações salvas do cliente atual
+        const currentUser = apiService.getCurrentUser();
+        if (currentUser) {
+          const savedTryOnsData = await arService.getClientVirtualTryOns(currentUser.id);
+          setSavedTryOns(savedTryOnsData);
+        }
+        
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Erro ao inicializar:', error);
+        toast.error('Houve um erro ao carregar os recursos necessários');
+        setIsLoading(false);
+      }
+    };
+    
+    initializeApp();
+  }, []);
 
   // Inicializa a câmera quando o usuário optar por tirar uma foto
   useEffect(() => {
@@ -119,6 +99,7 @@ const TryOn = () => {
           }
         } catch (error) {
           console.error('Erro ao acessar a câmera:', error);
+          toast.error('Não foi possível acessar a câmera');
           setShowCamera(false);
         }
       };
@@ -136,22 +117,65 @@ const TryOn = () => {
     }
   }, [showCamera]);
 
+  // Atualiza as recomendações quando o formato do rosto é detectado
+  useEffect(() => {
+    if (faceShape && hairstyles.length > 0) {
+      const recommended = faceRecognition.recommendHairstyles(faceShape, hairstyles);
+      setRecommendedStyles(recommended);
+    }
+  }, [faceShape, hairstyles]);
+
   // Funções de gerenciamento de imagens e processamento
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
     const reader = new FileReader();
-    reader.onload = (e) => {
+    reader.onload = async (e) => {
       if (e.target?.result) {
         setUploadedImage(e.target.result as string);
         setResultImage(null);
+        
+        // Processar a detecção facial na imagem carregada
+        await detectFacesInImage(e.target.result as string);
       }
     };
     reader.readAsDataURL(file);
   };
 
-  const takePhoto = () => {
+  const detectFacesInImage = async (imageDataUrl: string) => {
+    try {
+      const img = new Image();
+      img.src = imageDataUrl;
+      
+      await new Promise((resolve) => {
+        img.onload = resolve;
+      });
+      
+      // Usar nossa biblioteca de detecção facial
+      const detection = await faceRecognition.detectFaces(img, {
+        withLandmarks: true,
+        determineFaceShape: true
+      });
+      
+      if (detection.detections.length === 0) {
+        toast.error('Nenhum rosto detectado na imagem. Por favor, tente outra foto.');
+        return;
+      }
+      
+      setFaceDetection(detection);
+      if (detection.faceShape) {
+        setFaceShape(detection.faceShape);
+        toast.info(`Formato de rosto detectado: ${detection.faceShape}`);
+      }
+      
+    } catch (error) {
+      console.error('Erro na detecção facial:', error);
+      toast.error('Erro ao processar reconhecimento facial');
+    }
+  };
+
+  const takePhoto = async () => {
     if (videoRef.current && canvasRef.current) {
       const video = videoRef.current;
       const canvas = canvasRef.current;
@@ -167,6 +191,9 @@ const TryOn = () => {
         setShowCamera(false);
         setResultImage(null);
         
+        // Processar a detecção facial na foto tirada
+        await detectFacesInImage(imageDataUrl);
+        
         // Limpa a stream da câmera
         if (video.srcObject) {
           const stream = video.srcObject as MediaStream;
@@ -181,6 +208,9 @@ const TryOn = () => {
     setUploadedImage(null);
     setResultImage(null);
     setSelectedHairstyle(null);
+    setFaceDetection(null);
+    setFaceShape(null);
+    setTryOnFeedback(null);
   };
 
   const downloadResult = () => {
@@ -194,35 +224,88 @@ const TryOn = () => {
     document.body.removeChild(link);
   };
 
-  const selectHairstyle = (hairstyle: HairstyleOption) => {
+  const selectHairstyle = (hairstyle: Hairstyle) => {
     setSelectedHairstyle(hairstyle);
-    if (uploadedImage) {
+    if (uploadedImage && faceDetection) {
       processImage(hairstyle);
+    } else if (uploadedImage) {
+      toast.warning('Por favor, aguarde a detecção facial ser concluída');
+    } else {
+      toast.warning('Por favor, carregue uma imagem ou tire uma foto primeiro');
     }
   };
 
-  // Simula processamento de IA para aplicar o corte/barba
-  const processImage = (hairstyle: HairstyleOption) => {
+  // Processa a imagem para aplicar o estilo selecionado
+  const processImage = async (hairstyle: Hairstyle) => {
+    if (!uploadedImage || !faceDetection) return;
+    
     setIsProcessing(true);
     setShowProcessingStatus(true);
     setProcessingProgress(0);
     
-    // Simula o progresso do processamento
-    const progressInterval = setInterval(() => {
-      setProcessingProgress(prev => {
-        if (prev >= 95) {
-          clearInterval(progressInterval);
-          return 95;
-        }
-        return prev + Math.floor(Math.random() * 10) + 1;
+    try {
+      // Simula o progresso do processamento
+      const progressInterval = setInterval(() => {
+        setProcessingProgress(prev => {
+          if (prev >= 95) {
+            clearInterval(progressInterval);
+            return 95;
+          }
+          return prev + Math.floor(Math.random() * 10) + 1;
+        });
+      }, 300);
+      
+      // Criar imagem com o estilo a ser aplicado
+      const hairstyleImage = new Image();
+      hairstyleImage.crossOrigin = "anonymous";
+      hairstyleImage.setAttribute('data-category', hairstyle.category);
+      
+      // Usar a primeira imagem da lista
+      const imageUrl = hairstyle.image_urls && hairstyle.image_urls.length > 0 
+        ? hairstyle.image_urls[0] 
+        : 'https://via.placeholder.com/400?text=Estilo+Indisponível';
+      
+      hairstyleImage.src = imageUrl;
+      
+      await new Promise((resolve) => {
+        hairstyleImage.onload = resolve;
       });
-    }, 300);
-    
-    // Simula o tempo de processamento
-    setTimeout(() => {
-      // Na vida real, aqui chamaria uma API que processa a imagem usando IA
-      // Por enquanto, apenas mostra a imagem do estilo como resultado
-      setResultImage(hairstyle.image);
+      
+      // Criar uma imagem da foto do usuário
+      const userImage = new Image();
+      userImage.src = uploadedImage;
+      
+      await new Promise((resolve) => {
+        userImage.onload = resolve;
+      });
+      
+      // Preparar o canvas para renderização
+      const canvas = resultCanvasRef.current;
+      if (!canvas) {
+        throw new Error('Canvas não encontrado');
+      }
+      
+      canvas.width = userImage.width;
+      canvas.height = userImage.height;
+      
+      const ctx = canvas.getContext('2d');
+      if (!ctx) {
+        throw new Error('Não foi possível obter o contexto 2D do canvas');
+      }
+      
+      // Desenhar a imagem do usuário
+      ctx.drawImage(userImage, 0, 0, canvas.width, canvas.height);
+      
+      // Aplicar o estilo usando nosso serviço de AR
+      await faceRecognition.applyHairstyleOverlay(canvas, faceDetection, hairstyleImage);
+      
+      // Obter a imagem resultante
+      const resultDataUrl = canvas.toDataURL('image/png');
+      setResultImage(resultDataUrl);
+      
+      // Incrementar a popularidade do estilo
+      await arService.incrementHairstylePopularity(hairstyle.id);
+      
       setIsProcessing(false);
       setProcessingProgress(100);
       
@@ -232,7 +315,54 @@ const TryOn = () => {
       }, 1500);
       
       clearInterval(progressInterval);
-    }, 3000);
+    } catch (error) {
+      console.error('Erro ao processar imagem:', error);
+      toast.error('Houve um erro ao aplicar o estilo');
+      setIsProcessing(false);
+      setShowProcessingStatus(false);
+    }
+  };
+
+  const saveTryOn = async () => {
+    if (!resultImage || !selectedHairstyle || !user) {
+      toast.error('Nenhuma experimentação para salvar');
+      return;
+    }
+    
+    setIsSavingTryOn(true);
+    
+    try {
+      // Buscar o cliente ID a partir do user ID
+      const { data: clientData } = await apiService.getCurrentUser();
+      
+      if (!clientData?.id) {
+        throw new Error('Cliente não encontrado');
+      }
+      
+      // Obter cliente_id a partir do user_id atual
+      const clientId = clientData.id;
+      
+      // Salvar na tabela de try-ons
+      await arService.saveVirtualTryOn({
+        client_id: clientId,
+        hairstyle_id: selectedHairstyle.id,
+        result_image_url: resultImage,
+        face_data: faceShape ? { face_shape: faceShape } : null,
+        is_saved: true,
+        feedback: tryOnFeedback as 'liked' | 'disliked' | 'neutral' | null,
+      });
+      
+      toast.success('Experimentação salva com sucesso!');
+      
+      // Atualizar a lista de experimentações salvas
+      const savedTryOnsData = await arService.getClientVirtualTryOns(clientId);
+      setSavedTryOns(savedTryOnsData);
+    } catch (error) {
+      console.error('Erro ao salvar experimentação:', error);
+      toast.error('Não foi possível salvar a experimentação');
+    } finally {
+      setIsSavingTryOn(false);
+    }
   };
 
   const triggerFileInput = () => {
@@ -247,357 +377,515 @@ const TryOn = () => {
     setShowInfoModal(!showInfoModal);
   };
 
+  const toggleSavedTryOns = () => {
+    setShowSavedTryOns(!showSavedTryOns);
+  };
+
+  const provideFeedback = async (feedback: 'liked' | 'disliked' | 'neutral') => {
+    setTryOnFeedback(feedback);
+    
+    // Se já foi salvo, atualizar o feedback no banco de dados
+    if (savedTryOns.length > 0 && resultImage) {
+      const latestTryOn = savedTryOns[0];
+      if (latestTryOn.id) {
+        try {
+          await arService.updateTryOnFeedback(latestTryOn.id, feedback);
+          toast.success('Feedback registrado. Obrigado!');
+        } catch (error) {
+          console.error('Erro ao atualizar feedback:', error);
+        }
+      }
+    }
+  };
+
   return (
-    <div className="pb-10">
-      <div className="flex justify-between items-start mb-6">
-        <div>
-          <h1 className="text-2xl font-bold">Experimentar Cortes</h1>
-          <p className="text-muted-foreground">
-            Experimente diferentes cortes de cabelo e barba virtualmente
-          </p>
-        </div>
-        <button 
-          className="flex items-center px-3 py-1.5 bg-muted rounded-md hover:bg-muted/80 transition-colors"
-          onClick={toggleInfoModal}
-          aria-label="Informações sobre como usar esta ferramenta"
+    <div className="min-h-screen bg-gradient-to-b from-background to-background/80 text-foreground">
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="container mx-auto px-4 py-8"
+      >
+        <motion.h1 
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.1, duration: 0.5 }}
+          className="text-3xl font-bold mb-6 text-center"
         >
-          <Info size={18} className="mr-1.5" />
-          <span>Como funciona</span>
-        </button>
-      </div>
-      
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Painel Esquerdo - Upload e Preview */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* Área de Visualização */}
-          <div className="bg-card rounded-lg shadow-sm overflow-hidden">
-            {!uploadedImage && !showCamera ? (
-              <div className="h-[500px] flex flex-col items-center justify-center p-6 text-center">
-                <Upload size={48} className="text-muted-foreground mb-4" />
-                <h3 className="text-lg font-medium mb-2">
-                  Faça upload da sua foto
-                </h3>
-                <p className="text-muted-foreground max-w-md mb-6">
-                  Carregue uma imagem frontal clara do seu rosto para melhores resultados. 
-                  Recomendamos uma foto com iluminação adequada e fundo neutro.
-                </p>
-                
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <button 
-                    className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors flex items-center justify-center"
-                    onClick={triggerFileInput}
-                  >
-                    <Upload size={18} className="mr-2" />
-                    Fazer Upload
-                  </button>
-                  <button 
-                    className="px-4 py-2 bg-muted hover:bg-muted/80 rounded-md transition-colors flex items-center justify-center"
+          Experimente Cortes Virtualmente
+        </motion.h1>
+        
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+          className="flex flex-col lg:flex-row gap-8"
+        >
+          {/* Modificar a seção da webcam/upload para usar motion */}
+          <motion.div 
+            className="flex-1 bg-card rounded-xl shadow-lg overflow-hidden"
+            initial={{ x: -20, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ delay: 0.3, duration: 0.5 }}
+          >
+            <div className="p-6 flex flex-col h-full">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-bold">Sua Imagem</h2>
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
                     onClick={openCamera}
+                    disabled={isProcessing}
                   >
-                    <Camera size={18} className="mr-2" />
-                    Usar Câmera
-                  </button>
-                  
-                  <input 
-                    type="file" 
-                    accept="image/*" 
-                    className="hidden" 
+                    <Camera size={16} className="mr-1" />
+                    Câmera
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={triggerFileInput}
+                    disabled={isProcessing}
+                  >
+                    <Upload size={16} className="mr-1" />
+                    Upload
+                  </Button>
+                  <input
+                    type="file"
                     ref={fileInputRef}
+                    className="hidden"
+                    accept="image/*"
                     onChange={handleFileUpload}
-                    aria-label="Fazer upload de imagem para experimentar cortes"
-                    title="Selecione uma foto sua para experimentar os cortes"
                   />
                 </div>
               </div>
-            ) : showCamera ? (
-              <div className="relative h-[500px] flex items-center justify-center bg-black">
-                <video 
-                  ref={videoRef} 
-                  autoPlay 
-                  playsInline 
-                  className="max-h-full max-w-full"
-                ></video>
+              
+              {/* Container da webcam */}
+              <div className="relative flex-1 flex flex-col items-center justify-center border-2 border-dashed border-muted-foreground/30 rounded-lg overflow-hidden bg-black/10">
+                <AnimatePresence mode="wait">
+                  {!uploadedImage && !showCamera && (
+                    <motion.div 
+                      key="upload-prompt"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="text-center p-8"
+                    >
+                      <Image className="mx-auto mb-4 opacity-50" size={48} />
+                      <p className="text-muted-foreground">
+                        Tire uma foto ou faça upload de uma imagem para começar
+                      </p>
+                    </motion.div>
+                  )}
+                  
+                  {showCamera && (
+                    <motion.div 
+                      key="webcam-container"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="relative w-full h-full flex items-center justify-center"
+                      style={{ minHeight: '300px' }}
+                    >
+                      <Webcam
+                        audio={false}
+                        ref={videoRef}
+                        screenshotFormat="image/jpeg"
+                        videoConstraints={{ facingMode: 'user' }}
+                        className="max-h-full max-w-full"
+                      />
+                      <Button
+                        variant="secondary"
+                        size="icon"
+                        className="absolute bottom-4 left-1/2 transform -translate-x-1/2 rounded-full w-12 h-12"
+                        onClick={takePhoto}
+                        disabled={isProcessing}
+                      >
+                        <Camera size={24} />
+                      </Button>
+                    </motion.div>
+                  )}
+                  
+                  {uploadedImage && !showCamera && (
+                    <motion.div 
+                      key="image-preview"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="relative w-full h-full flex items-center justify-center"
+                    >
+                      <img
+                        src={uploadedImage}
+                        alt="Uploaded"
+                        className="max-h-full max-w-full"
+                      />
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        className="absolute bottom-4 right-4"
+                        onClick={resetImage}
+                        disabled={isProcessing}
+                      >
+                        <RefreshCw size={16} className="mr-1" />
+                        Nova foto
+                      </Button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
                 
-                <div className="absolute bottom-4 left-0 right-0 flex justify-center">
-                  <button 
-                    className="px-4 py-2 bg-primary text-primary-foreground rounded-full hover:bg-primary/90 transition-colors"
-                    onClick={takePhoto}
-                    aria-label="Tirar foto"
+                {/* Overlay de loading durante detecção/processamento */}
+                <AnimatePresence>
+                  {(isProcessing) && (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center"
+                    >
+                      <motion.div
+                        animate={{ rotate: 360 }}
+                        transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+                      >
+                        <Loader2 size={40} className="text-primary" />
+                      </motion.div>
+                      <motion.p
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.2 }}
+                        className="mt-4 text-white"
+                      >
+                        Aplicando corte...
+                      </motion.p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+              
+              {/* Info sobre formato de rosto */}
+              <AnimatePresence>
+                {faceShape && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 20 }}
+                    className="mt-4 p-4 bg-primary/10 rounded-lg"
                   >
-                    <Camera size={20} />
-                  </button>
-                </div>
-                
-                <button 
-                  className="absolute top-4 right-4 p-2 bg-background/80 backdrop-blur-sm rounded-full text-foreground hover:bg-background/60 transition-colors"
-                  onClick={() => setShowCamera(false)}
-                  aria-label="Fechar câmera"
-                >
-                  <X size={20} />
-                </button>
-                
-                <canvas ref={canvasRef} className="hidden"></canvas>
-              </div>
-            ) : (
-              <div className="relative h-[500px] flex items-center justify-center bg-black">
-                {resultImage ? (
-                  <img 
-                    src={resultImage} 
-                    alt="Resultado da simulação"
-                    className="max-h-full max-w-full object-contain"
-                  />
-                ) : (
-                  <img 
-                    src={uploadedImage} 
-                    alt="Imagem carregada"
-                    className="max-h-full max-w-full object-contain"
-                  />
-                )}
-                
-                {isProcessing && (
-                  <div className="absolute inset-0 bg-black/70 flex flex-col items-center justify-center">
-                    <Sparkles size={48} className="text-primary animate-pulse mb-4" />
-                    <h3 className="text-white text-lg font-medium mb-2">Processando sua imagem...</h3>
-                    <p className="text-white/70 mb-4">Nosso algoritmo de IA está aplicando o estilo selecionado</p>
-                    <div className="w-64 h-2 bg-white/20 rounded-full overflow-hidden">
-                      <div 
-                        className={`h-full bg-primary transition-all duration-300 rounded-full ${calcWidthPercentage(processingProgress, 100)}`}
-                      ></div>
+                    <div className="flex items-center gap-2">
+                      <User size={18} className="text-primary" />
+                      <h3 className="font-medium">Formato de Rosto Detectado</h3>
                     </div>
-                  </div>
+                    <p className="mt-1 capitalize text-sm">
+                      {faceShape === 'oval' && 'Oval'}
+                      {faceShape === 'round' && 'Redondo'}
+                      {faceShape === 'square' && 'Quadrado'}
+                      {faceShape === 'heart' && 'Coração'}
+                      {faceShape === 'long' && 'Alongado'}
+                      {faceShape === 'diamond' && 'Diamante'}
+                      {faceShape === 'triangle' && 'Triangular'}
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Recomendamos cortes compatíveis com seu formato de rosto
+                    </p>
+                  </motion.div>
                 )}
-                
-                <div className="absolute top-4 right-4 flex space-x-2">
-                  <button 
-                    className="p-2 bg-background/80 backdrop-blur-sm rounded-full text-foreground hover:bg-background/60 transition-colors"
-                    onClick={resetImage}
-                    aria-label="Redefinir imagem"
-                  >
-                    <RotateCcw size={20} />
-                  </button>
+              </AnimatePresence>
+            </div>
+          </motion.div>
+
+          {/* Seção de resultado e catálogo */}
+          <motion.div 
+            className="flex-1 bg-card rounded-xl shadow-lg overflow-hidden"
+            initial={{ x: 20, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ delay: 0.4, duration: 0.5 }}
+          >
+            <div className="p-6 flex flex-col h-full">
+              <h2 className="text-xl font-bold mb-4">Escolha um Corte</h2>
+              
+              {/* Catálogo de cortes de cabelo */}
+              <div className="grid grid-cols-2 gap-3 mb-6 overflow-y-auto max-h-56">
+                <AnimatePresence>
+                  {hairstyles.map((hairstyle, index) => (
+                    <motion.div
+                      key={hairstyle.id}
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: 0.05 * index }}
+                      whileHover={{ scale: 1.05 }}
+                      onClick={() => selectHairstyle(hairstyle)}
+                      className={`cursor-pointer rounded-lg overflow-hidden border-2 transition-all ${
+                        selectedHairstyle?.id === hairstyle.id
+                          ? 'border-primary'
+                          : 'border-transparent'
+                      }`}
+                    >
+                      <img
+                        src={hairstyle.image_urls[0]}
+                        alt={hairstyle.name}
+                        className="w-full h-24 object-cover"
+                      />
+                      <div className="p-2 text-xs">
+                        <h3 className="font-medium truncate">{hairstyle.name}</h3>
+                        {hairstyle.face_shape_compatibility?.includes(faceShape || '') && (
+                          <span className="text-xs text-green-500 flex items-center mt-1">
+                            <Check size={12} className="mr-1" /> Recomendado
+                          </span>
+                        )}
+                      </div>
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
+              </div>
+              
+              {/* Resultado do try-on */}
+              <div className="flex-1 border-2 border-dashed border-muted-foreground/30 rounded-lg flex items-center justify-center overflow-hidden bg-black/10">
+                <AnimatePresence mode="wait">
+                  {!resultImage && (
+                    <motion.div
+                      key="result-placeholder"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="text-center p-8"
+                    >
+                      <Scissors className="mx-auto mb-4 opacity-50" size={48} />
+                      <p className="text-muted-foreground">
+                        Seu resultado aparecerá aqui
+                      </p>
+                    </motion.div>
+                  )}
                   
                   {resultImage && (
-                    <button 
-                      className="p-2 bg-background/80 backdrop-blur-sm rounded-full text-foreground hover:bg-background/60 transition-colors"
-                      onClick={downloadResult}
-                      aria-label="Baixar resultado"
+                    <motion.div
+                      key="result-image"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="w-full h-full flex items-center justify-center"
                     >
-                      <Download size={20} />
-                    </button>
+                      <img
+                        src={resultImage}
+                        alt="Result"
+                        className="max-h-full max-w-full"
+                      />
+                    </motion.div>
                   )}
-                </div>
+                </AnimatePresence>
               </div>
-            )}
-          </div>
-          
-          {/* Controles e Ações (apenas se houver imagem) */}
-          {uploadedImage && resultImage && (
-            <div className="bg-card p-4 rounded-lg shadow-sm">
-              <div className="flex flex-col sm:flex-row justify-between gap-4">
-                <div>
-                  <h3 className="font-medium">
-                    {selectedHairstyle?.name || 'Estilo aplicado'}
-                  </h3>
-                  <p className="text-sm text-muted-foreground">
-                    {selectedHairstyle?.category === 'corte' ? 'Corte de cabelo' : 'Estilo de barba'}
-                  </p>
-                </div>
-                
-                <div className="flex gap-2">
-                  <button className="px-3 py-1.5 border rounded-md hover:bg-muted transition-colors flex items-center">
-                    <Heart size={16} className="mr-1.5" />
-                    Salvar
-                  </button>
-                  <button className="px-3 py-1.5 border rounded-md hover:bg-muted transition-colors flex items-center">
-                    <Share2 size={16} className="mr-1.5" />
-                    Compartilhar
-                  </button>
-                  <button className="px-3 py-1.5 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors flex items-center">
-                    <Scissors size={16} className="mr-1.5" />
-                    Agendar Corte
-                  </button>
-                </div>
+              
+              {/* Botões de ação */}
+              <div className="mt-4 flex gap-2 justify-end">
+                {resultImage && (
+                  <AnimatePresence>
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.9 }}
+                      className="flex gap-2"
+                    >
+                      <Button
+                        variant="outline"
+                        onClick={downloadResult}
+                        disabled={!resultImage || isProcessing}
+                      >
+                        <Download size={16} className="mr-1" />
+                        Baixar
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={toggleSavedTryOns}
+                        disabled={isProcessing}
+                      >
+                        <Clock size={16} className="mr-1" />
+                        Histórico
+                      </Button>
+                      <Button
+                        onClick={saveTryOn}
+                        disabled={!resultImage || isProcessing || isSavingTryOn}
+                      >
+                        {isSavingTryOn ? (
+                          <>
+                            <Loader2 size={16} className="mr-1 animate-spin" />
+                            Salvando...
+                          </>
+                        ) : (
+                          <>
+                            <Save size={16} className="mr-1" />
+                            Salvar
+                          </>
+                        )}
+                      </Button>
+                    </motion.div>
+                  </AnimatePresence>
+                )}
               </div>
             </div>
-          )}
-          
-          {/* Barra de processamento flutuante */}
-          {showProcessingStatus && (
-            <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-card shadow-lg rounded-lg p-3 z-50 flex items-center w-72">
-              <div className="w-full">
-                <div className="flex justify-between items-center mb-1">
-                  <span className="text-xs font-medium">Processando</span>
-                  <span className="text-xs">{processingProgress}%</span>
-                </div>
-                <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden">
-                  <div 
-                    className={`h-full bg-primary transition-all duration-300 rounded-full ${calcWidthPercentage(processingProgress, 100)}`}
-                  ></div>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
+          </motion.div>
+        </motion.div>
         
-        {/* Painel Direito - Estilos Disponíveis */}
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-medium">Estilos Disponíveis</h2>
-            
-            <div className="flex">
-              <button 
-                className={`px-3 py-1 text-sm rounded-l-md ${filter === 'all' ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'}`}
-                onClick={() => setFilter('all')}
-              >
-                Todos
-              </button>
-              <button 
-                className={`px-3 py-1 text-sm ${filter === 'corte' ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'}`}
-                onClick={() => setFilter('corte')}
-              >
-                Cortes
-              </button>
-              <button 
-                className={`px-3 py-1 text-sm rounded-r-md ${filter === 'barba' ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'}`}
-                onClick={() => setFilter('barba')}
-              >
-                Barbas
-              </button>
-            </div>
-          </div>
-          
-          <div className="overflow-y-auto pr-2 max-h-[600px] grid grid-cols-2 gap-3">
-            {filteredStyles.map(style => (
-              <div 
-                key={style.id}
-                className={`relative rounded-lg overflow-hidden cursor-pointer transition-all hover:shadow-md ${selectedHairstyle?.id === style.id ? 'ring-2 ring-primary' : ''}`}
-                onClick={() => selectHairstyle(style)}
-              >
-                <img 
-                  src={style.image} 
-                  alt={style.name}
-                  className="w-full h-40 object-cover"
-                />
-                
-                {style.new && (
-                  <div className="absolute top-2 left-2 bg-blue-500 text-white text-xs px-2 py-0.5 rounded-full">
-                    Novo
-                  </div>
-                )}
-                
-                {style.popular && (
-                  <div className="absolute top-2 right-2 bg-amber-500 text-white text-xs px-2 py-0.5 rounded-full">
-                    Popular
-                  </div>
-                )}
-                
-                <div className="p-2">
-                  <h3 className="font-medium text-sm">{style.name}</h3>
-                  <p className="text-xs text-muted-foreground">
-                    {style.category === 'corte' ? 'Corte de cabelo' : 'Estilo de barba'}
+        {/* Seção de feedback */}
+        <AnimatePresence>
+          {resultImage && !tryOnFeedback && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ delay: 0.5 }}
+              className="mt-8 p-6 bg-card rounded-xl shadow-lg"
+            >
+              <h2 className="text-xl font-bold mb-4">O que achou deste estilo?</h2>
+              <div className="flex gap-4 justify-center">
+                <Button
+                  variant="outline"
+                  className="flex-1 border-red-200 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950"
+                  onClick={() => provideFeedback('disliked')}
+                >
+                  <ThumbsDown size={16} className="mr-2" />
+                  Não gostei
+                </Button>
+                <Button
+                  variant="outline"
+                  className="flex-1 border-orange-200 hover:bg-orange-50 hover:text-orange-600 dark:hover:bg-orange-950"
+                  onClick={() => provideFeedback('neutral')}
+                >
+                  <Shuffle size={16} className="mr-2" />
+                  Neutro
+                </Button>
+                <Button
+                  variant="outline"
+                  className="flex-1 border-green-200 hover:bg-green-50 hover:text-green-600 dark:hover:bg-green-950"
+                  onClick={() => provideFeedback('liked')}
+                >
+                  <ThumbsUp size={16} className="mr-2" />
+                  Adorei
+                </Button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
+      
+      {/* Modal com informações */}
+      <AnimatePresence>
+        {showInfoModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
+            onClick={toggleInfoModal}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-card max-w-md w-full rounded-xl shadow-xl p-6"
+            >
+              <h2 className="text-xl font-bold mb-4 flex items-center">
+                <Info size={20} className="text-primary mr-2" />
+                Como usar o Experimento Virtual
+              </h2>
+              <div className="space-y-3">
+                <p>1. Tire uma foto usando a webcam ou faça upload de uma imagem</p>
+                <p>2. Nosso sistema detectará automaticamente seu rosto</p>
+                <p>3. Escolha um dos cortes disponíveis no catálogo</p>
+                <p>4. Veja como você ficaria com o novo visual</p>
+                <p>5. Salve ou compartilhe os resultados que você gostar</p>
+              </div>
+              <div className="mt-6 flex justify-end">
+                <Button onClick={toggleInfoModal}>Entendi</Button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      
+      {/* Modal de histórico */}
+      <AnimatePresence>
+        {showSavedTryOns && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
+            onClick={toggleSavedTryOns}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-card max-w-2xl w-full rounded-xl shadow-xl p-6 max-h-[80vh] overflow-auto"
+            >
+              <h2 className="text-xl font-bold mb-4 flex items-center">
+                <Clock size={20} className="text-primary mr-2" />
+                Seus Experimentos Salvos
+              </h2>
+              
+              {savedTryOns.length === 0 ? (
+                <div className="text-center py-12">
+                  <Save size={48} className="mx-auto mb-4 text-muted-foreground/50" />
+                  <p className="text-muted-foreground">
+                    Você ainda não tem experimentos salvos
                   </p>
                 </div>
-              </div>
-            ))}
-          </div>
-          
-          {/* Mensagem caso não tenha feito upload de imagem */}
-          {!uploadedImage && (
-            <div className="rounded-lg border border-dashed p-4 bg-muted/50 text-center">
-              <AlertCircle size={24} className="mx-auto mb-2 text-muted-foreground" />
-              <p className="text-sm text-muted-foreground">
-                Envie uma foto sua para experimentar estes estilos
-              </p>
-            </div>
-          )}
-        </div>
-      </div>
-      
-      {/* Modal de Informações */}
-      {showInfoModal && (
-        <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex justify-center items-center p-4">
-          <div className="bg-card rounded-lg shadow-lg w-full max-w-xl">
-            <div className="p-6">
-              <div className="flex justify-between items-start mb-4">
-                <h2 className="text-xl font-bold">Como Experimentar Cortes</h2>
-                <button
-                  className="text-muted-foreground hover:text-foreground" 
-                  onClick={toggleInfoModal}
-                  aria-label="Fechar informações"
-                >
-                  <X size={20} />
-                </button>
-              </div>
+              ) : (
+                <div className="grid grid-cols-2 gap-4">
+                  {savedTryOns.map((tryOn, index) => (
+                    <motion.div
+                      key={tryOn.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.05 }}
+                      className="bg-background rounded-lg overflow-hidden border border-border"
+                    >
+                      <div className="h-48 overflow-hidden">
+                        <img
+                          src={tryOn.result_image_url || ''}
+                          alt="Saved try-on"
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div className="p-3">
+                        <p className="font-medium mb-1">{tryOn.hairstyle?.name || 'Corte'}</p>
+                        <p className="text-xs text-muted-foreground mb-2">
+                          {new Date(tryOn.created_at).toLocaleDateString()}
+                        </p>
+                        <div className="flex justify-between">
+                          <Badge
+                            variant="outline"
+                            className={
+                              tryOn.feedback === 'liked'
+                                ? 'border-green-200 text-green-600'
+                                : tryOn.feedback === 'disliked'
+                                ? 'border-red-200 text-red-600'
+                                : 'border-orange-200 text-orange-600'
+                            }
+                          >
+                            {tryOn.feedback === 'liked'
+                              ? 'Adorei'
+                              : tryOn.feedback === 'disliked'
+                              ? 'Não gostei'
+                              : 'Neutro'}
+                          </Badge>
+                          <Button size="sm" variant="ghost" onClick={() => downloadSavedTryOn(tryOn)}>
+                            <Download size={14} />
+                          </Button>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              )}
               
-              <div className="space-y-4">
-                <div className="flex items-start">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center text-primary mr-3">
-                    1
-                  </div>
-                  <div>
-                    <h3 className="font-medium">Envie sua foto</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Faça upload de uma foto frontal do seu rosto ou use a câmera para tirar uma foto instantaneamente. Para melhores resultados, use uma foto com boa iluminação e fundo neutro.
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center text-primary mr-3">
-                    2
-                  </div>
-                  <div>
-                    <h3 className="font-medium">Escolha um estilo</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Navegue pelos estilos disponíveis e clique em um para aplicá-lo à sua foto. Você pode filtrar entre cortes de cabelo e estilos de barba.
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center text-primary mr-3">
-                    3
-                  </div>
-                  <div>
-                    <h3 className="font-medium">Visualize o resultado</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Nossa tecnologia de IA aplicará o estilo escolhido à sua foto. Aguarde alguns instantes para o processamento ser concluído.
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center text-primary mr-3">
-                    4
-                  </div>
-                  <div>
-                    <h3 className="font-medium">Salve ou agende</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Se gostar do resultado, você pode baixar a imagem, salvá-la na sua conta ou agendar diretamente com um barbeiro para obter o estilo escolhido.
-                    </p>
-                  </div>
-                </div>
+              <div className="mt-6 flex justify-end">
+                <Button onClick={toggleSavedTryOns}>Fechar</Button>
               </div>
-              
-              <div className="mt-6 p-3 bg-blue-50 text-blue-800 rounded-md flex items-start">
-                <Info size={20} className="mr-2 flex-shrink-0 mt-0.5" />
-                <p className="text-sm">
-                  Esta é uma ferramenta de simulação visual. Os resultados reais podem variar dependendo do seu tipo de cabelo, formato de rosto e habilidade do barbeiro. Recomendamos sempre consultar um profissional.
-                </p>
-              </div>
-              
-              <div className="mt-6 text-right">
-                <button 
-                  className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
-                  onClick={toggleInfoModal}
-                >
-                  Entendi
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

@@ -1,0 +1,182 @@
+.barber-icons-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.falling-icon {
+  position: absolute;
+  top: -50px;
+  animation: falling linear infinite;
+  opacity: 0.9;
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.7));
+  z-index: -1;
+  -webkit-user-select: none;
+  user-select: none;
+  pointer-events: none;
+  transform-origin: center;
+}
+
+/* Tamanhos de ícones */
+.falling-icon.small {
+  font-size: 20px;
+}
+
+.falling-icon.medium {
+  font-size: 35px;
+}
+
+.falling-icon.large {
+  font-size: 50px;
+}
+
+/* Velocidades de queda */
+.falling-icon.slow {
+  animation-duration: calc(var(--falling-speed, 12s) * 1.5);
+}
+
+.falling-icon.medium {
+  animation-duration: var(--falling-speed, 10s);
+}
+
+.falling-icon.fast {
+  animation-duration: calc(var(--falling-speed, 8s) * 0.7);
+}
+
+/* Efeito de rastro */
+.falling-icon.with-trail {
+  position: relative;
+}
+
+.falling-icon.with-trail::after {
+  content: '';
+  position: absolute;
+  top: -300%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 3px;
+  height: 200px;
+  background: linear-gradient(to top, transparent, var(--trail-color, #ffa500));
+  z-index: -1;
+  opacity: 0.8;
+}
+
+/* Animação de queda */
+@keyframes falling {
+  0% {
+    transform: translateY(-50px) rotate(0deg) scale(0.7);
+    opacity: 0;
+  }
+  5% {
+    opacity: 0.9;
+    transform: translateY(10vh) rotate(15deg) scale(1);
+  }
+  95% {
+    opacity: 0.9;
+    transform: translateY(90vh) rotate(345deg) scale(1);
+  }
+  100% {
+    transform: translateY(105vh) rotate(360deg) scale(0.7);
+    opacity: 0;
+  }
+}
+
+/* Ajuste para modo escuro */
+@media (prefers-color-scheme: dark) {
+  .falling-icon {
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
+  }
+}
+
+/* Ajuste para telas menores */
+@media (max-width: 768px) {
+  .falling-icon.with-trail::after {
+    height: 100px;
+  }
+  
+  .falling-icon.large {
+    font-size: 35px;
+  }
+}
+
+/* Adicionar novos efeitos para os ícones especiais */
+.falling-icon.with-glow {
+  filter: drop-shadow(0 0 15px gold) drop-shadow(0 0 5px white);
+  animation-name: falling-glow;
+  z-index: 0;
+}
+
+.falling-icon.with-rotation {
+  animation-name: falling-rotate;
+}
+
+.svg-icon {
+  display: inline-block;
+  transform-origin: center;
+  animation: pulse 2s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+@keyframes falling-glow {
+  0% {
+    transform: translateY(-50px) rotate(0deg) scale(0.7);
+    opacity: 0;
+    filter: drop-shadow(0 0 5px gold);
+  }
+  5% {
+    opacity: 0.9;
+    transform: translateY(10vh) rotate(15deg) scale(1);
+    filter: drop-shadow(0 0 15px gold) drop-shadow(0 0 5px white);
+  }
+  50% {
+    filter: drop-shadow(0 0 20px gold) drop-shadow(0 0 10px white);
+  }
+  95% {
+    opacity: 0.9;
+    transform: translateY(90vh) rotate(345deg) scale(1);
+    filter: drop-shadow(0 0 15px gold) drop-shadow(0 0 5px white);
+  }
+  100% {
+    transform: translateY(105vh) rotate(360deg) scale(0.7);
+    opacity: 0;
+    filter: drop-shadow(0 0 5px gold);
+  }
+}
+
+@keyframes falling-rotate {
+  0% {
+    transform: translateY(-50px) rotate(0deg) scale(0.7);
+    opacity: 0;
+  }
+  5% {
+    opacity: 0.9;
+    transform: translateY(10vh) rotate(45deg) scale(1);
+  }
+  25% {
+    transform: translateY(30vh) rotate(180deg) scale(1.1);
+  }
+  50% {
+    transform: translateY(50vh) rotate(270deg) scale(1);
+  }
+  75% {
+    transform: translateY(70vh) rotate(450deg) scale(1.1);
+  }
+  95% {
+    opacity: 0.9;
+    transform: translateY(90vh) rotate(630deg) scale(1);
+  }
+  100% {
+    transform: translateY(105vh) rotate(720deg) scale(0.7);
+    opacity: 0;
+  }
+} 

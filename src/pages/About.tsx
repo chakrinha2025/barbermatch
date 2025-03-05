@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { animationClasses } from '@/lib/animations';
-import { ArrowRight, CheckCircle, Users, Code, Smartphone, Star, Mail, Linkedin, Twitter, Award, Sparkles, TrendingUp, Scissors } from 'lucide-react';
+import { ArrowRight, CheckCircle, Users, Code, Smartphone, Star, Mail, Linkedin, Twitter, Award, Sparkles, TrendingUp, Scissors, Instagram } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 
@@ -290,30 +290,72 @@ const About = () => {
                 </div>
                 
                 <div className="flex space-x-4 mt-8">
-                  <motion.a 
-                    href="#" 
-                    className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors"
-                    whileHover={{ scale: 1.2, rotate: 5, boxShadow: "0 0 15px rgba(var(--primary-rgb)/0.5)" }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Linkedin size={18} />
-                  </motion.a>
-                  <motion.a 
-                    href="#" 
-                    className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors"
-                    whileHover={{ scale: 1.2, rotate: 5, boxShadow: "0 0 15px rgba(var(--primary-rgb)/0.5)" }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Twitter size={18} />
-                  </motion.a>
-                  <motion.a 
-                    href="#" 
-                    className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors"
-                    whileHover={{ scale: 1.2, rotate: 5, boxShadow: "0 0 15px rgba(var(--primary-rgb)/0.5)" }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Mail size={18} />
-                  </motion.a>
+                  <div className="relative group">
+                    <motion.div
+                      className="absolute -inset-1 bg-gradient-to-r from-primary/80 to-primary rounded-full blur-md opacity-60 group-hover:opacity-100 transition-all duration-300"
+                      animate={{ 
+                        rotate: [0, 5, 0, -5, 0],
+                        scale: [1, 1.02, 1, 1.02, 1]
+                      }}
+                      transition={{ duration: 5, repeat: Infinity }}
+                    />
+                    <motion.a 
+                      href="https://www.linkedin.com/in/taohan-ferreira-batista-814a2634a/" 
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="relative flex items-center justify-center w-12 h-12 rounded-full bg-background border-2 border-primary/50 shadow-lg text-primary hover:text-white hover:bg-primary transition-colors z-10"
+                      whileHover={{ scale: 1.15, rotate: 5 }}
+                      whileTap={{ scale: 0.95 }}
+                      aria-label="LinkedIn de Taohan Batista"
+                      title="LinkedIn de Taohan"
+                    >
+                      <Linkedin size={22} className="drop-shadow-md" />
+                    </motion.a>
+                  </div>
+                  
+                  <div className="relative group">
+                    <motion.div
+                      className="absolute -inset-1 bg-gradient-to-r from-rose-500/80 to-primary/80 rounded-full blur-md opacity-60 group-hover:opacity-100 transition-all duration-300"
+                      animate={{ 
+                        rotate: [0, -5, 0, 5, 0],
+                        scale: [1, 1.02, 1, 1.02, 1]
+                      }}
+                      transition={{ duration: 5, repeat: Infinity, delay: 0.5 }}
+                    />
+                    <motion.a 
+                      href="https://www.instagram.com/_taohan/" 
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="relative flex items-center justify-center w-12 h-12 rounded-full bg-background border-2 border-rose-500/50 shadow-lg text-rose-500 hover:text-white hover:bg-gradient-to-br from-rose-500 to-amber-500 transition-all z-10"
+                      whileHover={{ scale: 1.15, rotate: -5 }}
+                      whileTap={{ scale: 0.95 }}
+                      aria-label="Instagram de Taohan Batista"
+                      title="Instagram de Taohan"
+                    >
+                      <Instagram size={22} className="drop-shadow-md" />
+                    </motion.a>
+                  </div>
+                  
+                  <div className="relative group">
+                    <motion.div
+                      className="absolute -inset-1 bg-gradient-to-r from-blue-500/80 to-primary/80 rounded-full blur-md opacity-60 group-hover:opacity-100 transition-all duration-300"
+                      animate={{ 
+                        rotate: [0, 5, 0, -5, 0],
+                        scale: [1, 1.02, 1, 1.02, 1]
+                      }}
+                      transition={{ duration: 5, repeat: Infinity, delay: 1 }}
+                    />
+                    <motion.a 
+                      href="mailto:contato@barbermatch.com" 
+                      className="relative flex items-center justify-center w-12 h-12 rounded-full bg-background border-2 border-blue-500/50 shadow-lg text-blue-500 hover:text-white hover:bg-blue-500 transition-colors z-10"
+                      whileHover={{ scale: 1.15, rotate: 5 }}
+                      whileTap={{ scale: 0.95 }}
+                      aria-label="Email de contato"
+                      title="Email de Contato"
+                    >
+                      <Mail size={22} className="drop-shadow-md" />
+                    </motion.a>
+                  </div>
                 </div>
               </motion.div>
             </div>
@@ -387,31 +429,70 @@ const About = () => {
                   </motion.p>
                 </div>
                 
-                <div className="flex space-x-4 mt-8">
-                  <motion.a 
-                    href="#" 
-                    className="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center text-secondary hover:bg-secondary hover:text-white transition-colors"
-                    whileHover={{ scale: 1.2, rotate: 5, boxShadow: "0 0 15px rgba(var(--secondary-rgb)/0.5)" }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Linkedin size={18} />
-                  </motion.a>
-                  <motion.a 
-                    href="#" 
-                    className="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center text-secondary hover:bg-secondary hover:text-white transition-colors"
-                    whileHover={{ scale: 1.2, rotate: 5, boxShadow: "0 0 15px rgba(var(--secondary-rgb)/0.5)" }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Twitter size={18} />
-                  </motion.a>
-                  <motion.a 
-                    href="#" 
-                    className="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center text-secondary hover:bg-secondary hover:text-white transition-colors"
-                    whileHover={{ scale: 1.2, rotate: 5, boxShadow: "0 0 15px rgba(var(--secondary-rgb)/0.5)" }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Mail size={18} />
-                  </motion.a>
+                <div className="flex space-x-6 mt-8">
+                  <div className="relative group">
+                    {/* Efeito de brilho intenso */}
+                    <div className="absolute -inset-0.5 bg-violet-600 rounded-full opacity-75 blur-sm group-hover:opacity-100 animate-pulse"></div>
+                    <div className="absolute -inset-1 bg-gradient-to-r from-violet-600 to-fuchsia-600 rounded-full opacity-75 blur-md group-hover:opacity-100"></div>
+                    
+                    <motion.a 
+                      href="https://www.linkedin.com/in/thales-batista/" 
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="relative flex items-center justify-center w-14 h-14 rounded-full bg-white text-violet-600 hover:text-white hover:bg-violet-600 transition-colors z-10 shadow-[0_0_15px_rgba(139,92,246,0.5)]"
+                      whileHover={{ 
+                        scale: 1.15, 
+                        boxShadow: '0 0 25px rgba(139,92,246,0.8)'
+                      }}
+                      whileTap={{ scale: 0.95 }}
+                      aria-label="LinkedIn de Thales Batista"
+                      title="LinkedIn de Thales"
+                    >
+                      <Linkedin size={26} className="drop-shadow-md" />
+                    </motion.a>
+                  </div>
+                  
+                  <div className="relative group">
+                    {/* Efeito de brilho intenso */}
+                    <div className="absolute -inset-0.5 bg-rose-500 rounded-full opacity-75 blur-sm group-hover:opacity-100 animate-pulse"></div>
+                    <div className="absolute -inset-1 bg-gradient-to-r from-rose-500 to-amber-500 rounded-full opacity-75 blur-md group-hover:opacity-100"></div>
+                    
+                    <motion.a 
+                      href="https://www.instagram.com/thales.fb/" 
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="relative flex items-center justify-center w-14 h-14 rounded-full bg-white text-rose-500 hover:text-white hover:bg-gradient-to-br from-rose-500 to-amber-500 transition-all z-10 shadow-[0_0_15px_rgba(244,63,94,0.5)]"
+                      whileHover={{ 
+                        scale: 1.15, 
+                        boxShadow: '0 0 25px rgba(244,63,94,0.8)'
+                      }}
+                      whileTap={{ scale: 0.95 }}
+                      aria-label="Instagram de Thales Batista"
+                      title="Instagram de Thales"
+                    >
+                      <Instagram size={26} className="drop-shadow-md" />
+                    </motion.a>
+                  </div>
+                  
+                  <div className="relative group">
+                    {/* Efeito de brilho intenso */}
+                    <div className="absolute -inset-0.5 bg-blue-500 rounded-full opacity-75 blur-sm group-hover:opacity-100 animate-pulse"></div>
+                    <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full opacity-75 blur-md group-hover:opacity-100"></div>
+                    
+                    <motion.a 
+                      href="mailto:thales@barbermatch.com" 
+                      className="relative flex items-center justify-center w-14 h-14 rounded-full bg-white text-blue-500 hover:text-white hover:bg-blue-500 transition-colors z-10 shadow-[0_0_15px_rgba(59,130,246,0.5)]"
+                      whileHover={{ 
+                        scale: 1.15, 
+                        boxShadow: '0 0 25px rgba(59,130,246,0.8)'
+                      }}
+                      whileTap={{ scale: 0.95 }}
+                      aria-label="Email de contato de Thales"
+                      title="Email de Thales"
+                    >
+                      <Mail size={26} className="drop-shadow-md" />
+                    </motion.a>
+                  </div>
                 </div>
               </motion.div>
               

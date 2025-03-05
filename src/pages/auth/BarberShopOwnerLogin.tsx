@@ -252,10 +252,11 @@ export default function BarberShopOwnerLogin() {
                         <button
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-3"
-                      tabIndex={-1}
-                    >
-                      {showPassword ? <EyeOff className="h-4 w-4 text-muted-foreground" /> : <Eye className="h-4 w-4 text-muted-foreground" />}
+                          className="absolute right-3 top-3"
+                          tabIndex={-1}
+                          aria-label={showPassword ? "Esconder senha" : "Mostrar senha"}
+                        >
+                          {showPassword ? <EyeOff className="h-4 w-4 text-muted-foreground" /> : <Eye className="h-4 w-4 text-muted-foreground" />}
                         </button>
                       </div>
                     </div>

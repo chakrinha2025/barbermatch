@@ -499,6 +499,7 @@ const Register = () => {
                     type="button"
                     onClick={togglePasswordVisibility}
                     className="absolute inset-y-0 right-0 flex items-center pr-3"
+                    aria-label={showPassword ? "Esconder senha" : "Mostrar senha"}
                   >
                     {showPassword ? <EyeOff className="h-5 w-5 text-muted-foreground" /> : <Eye className="h-5 w-5 text-muted-foreground" />}
                   </button>
@@ -524,6 +525,7 @@ const Register = () => {
                     type="button"
                     onClick={toggleConfirmPasswordVisibility}
                     className="absolute inset-y-0 right-0 flex items-center pr-3"
+                    aria-label={showConfirmPassword ? "Esconder confirmação de senha" : "Mostrar confirmação de senha"}
                   >
                     {showConfirmPassword ? <EyeOff className="h-5 w-5 text-muted-foreground" /> : <Eye className="h-5 w-5 text-muted-foreground" />}
                   </button>

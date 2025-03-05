@@ -1,0 +1,41 @@
+.motion-card {
+  position: relative;
+  border-radius: 1rem;
+  overflow: hidden;
+  transition: transform 0.1s ease;
+  will-change: transform;
+  transform-style: preserve-3d;
+  background-color: hsl(var(--card));
+}
+
+.motion-card.with-border {
+  border: 1px solid hsl(var(--border));
+}
+
+.motion-card.with-shadow {
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.1);
+}
+
+.dark .motion-card.with-shadow {
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
+}
+
+.motion-card-content {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  width: 100%;
+  will-change: transform;
+  transform-style: preserve-3d;
+}
+
+.motion-card-glare {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 10;
+  mix-blend-mode: overlay;
+} 

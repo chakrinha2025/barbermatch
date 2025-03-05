@@ -1,11 +1,199 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronLeft, MessageSquare, Send, User, Clock, CheckCircle, Image, Paperclip, Smile, Search } from 'lucide-react';
+import { ChevronLeft, MessageSquare, Send, User, Clock, CheckCircle, Image, Paperclip, Smile, Search, MoreVertical, Phone, Video, Info, Check } from 'lucide-react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import { motion } from 'framer-motion';
 
+// Tipos para as mensagens
+interface Message {
+  id: string;
+  sender: 'user' | 'barber';
+  text: string;
+  timestamp: Date;
+  status: 'sent' | 'delivered' | 'read';
+  attachments?: {
+    type: 'image' | 'document';
+    url: string;
+    name?: string;
+  }[];
+}
+
+// Tipo para contatos de barbeiros
+interface BarberContact {
+  id: string;
+  name: string;
+  avatar: string;
+  status: 'online' | 'offline' | 'away';
+  lastSeen?: Date;
+  unreadCount?: number;
+  barberShop: string;
+  isFavorite: boolean;
+}
+
 const BarberChat = () => {
+  // Estado para armazenar mensagens
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      id: '1',
+      sender: 'barber',
+      text: 'Olá! Como posso ajudar você hoje?',
+      timestamp: new Date(Date.now() - 1000 * 60 * 30), // 30 minutos atrás
+      status: 'read'
+    },
+    {
+      id: '2',
+      sender: 'user',
+      text: 'Olá, queria saber se é possível agendar um corte para amanhã às 15h?',
+      timestamp: new Date(Date.now() - 1000 * 60 * 25), // 25 minutos atrás
+      status: 'read'
+    },
+    {
+      id: '3',
+      sender: 'barber',
+      text: 'Claro! Tenho disponibilidade nesse horário. Prefere o corte tradicional ou quer experimentar algo novo?',
+      timestamp: new Date(Date.now() - 1000 * 60 * 23), // 23 minutos atrás
+      status: 'read'
+    },
+    {
+      id: '4',
+      sender: 'user',
+      text: 'Queria tentar um degradê dessa vez',
+      timestamp: new Date(Date.now() - 1000 * 60 * 20), // 20 minutos atrás
+      status: 'read'
+    },
+    {
+      id: '5',
+      sender: 'barber',
+      text: 'Perfeito! Vou preparar tudo para o degradê. Quer adicionar barba ao serviço também?',
+      timestamp: new Date(Date.now() - 1000 * 60 * 18), // 18 minutos atrás
+      status: 'read'
+    },
+    {
+      id: '6',
+      sender: 'user',
+      text: 'Sim, por favor. Quanto ficaria o total?',
+      timestamp: new Date(Date.now() - 1000 * 60 * 15), // 15 minutos atrás
+      status: 'read'
+    },
+    {
+      id: '7',
+      sender: 'barber',
+      text: 'O degradê é R$45 e a barba R$30, então o total seria R$75. Você tem um desconto de cliente fiel de 10%, então fica R$67,50',
+      timestamp: new Date(Date.now() - 1000 * 60 * 13), // 13 minutos atrás
+      status: 'read'
+    },
+    {
+      id: '8',
+      sender: 'user',
+      text: 'Ótimo! Confirmo o agendamento então.',
+      timestamp: new Date(Date.now() - 1000 * 60 * 10), // 10 minutos atrás
+      status: 'read'
+    },
+    {
+      id: '9',
+      sender: 'barber',
+      text: 'Perfeito! Agendamento confirmado para amanhã às 15h - degradê + barba. Vou enviar uma confirmação para seu celular também. Até lá!',
+      timestamp: new Date(Date.now() - 1000 * 60 * 8), // 8 minutos atrás
+      status: 'read'
+    },
+    {
+      id: '10',
+      sender: 'barber',
+      text: 'Aliás, se você tiver alguma referência do degradê que gostaria, pode me enviar uma foto para eu me preparar melhor.',
+      timestamp: new Date(Date.now() - 1000 * 60 * 7), // 7 minutos atrás
+      status: 'delivered'
+    }
+  ]);
+
+  // Lista de contatos de barbeiros
+  const [barberContacts, setBarberContacts] = useState<BarberContact[]>([
+    {
+      id: '1',
+      name: 'Rafael Costa',
+      avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
+      status: 'online',
+      unreadCount: 2,
+      barberShop: 'Barbearia Vintage',
+      isFavorite: true
+    },
+    {
+      id: '2',
+      name: 'André Martins',
+      avatar: 'https://randomuser.me/api/portraits/men/44.jpg',
+      status: 'offline',
+      lastSeen: new Date(Date.now() - 1000 * 60 * 45),
+      barberShop: 'BarberKing',
+      isFavorite: true
+    },
+    {
+      id: '3',
+      name: 'Lucas Oliveira',
+      avatar: 'https://randomuser.me/api/portraits/men/56.jpg',
+      status: 'online',
+      barberShop: 'Cortes & Cia',
+      isFavorite: false
+    },
+    {
+      id: '4',
+      name: 'Matheus Silva',
+      avatar: 'https://randomuser.me/api/portraits/men/67.jpg',
+      status: 'away',
+      barberShop: 'Barba Negra',
+      isFavorite: false
+    },
+    {
+      id: '5',
+      name: 'Carlos Freitas',
+      avatar: 'https://randomuser.me/api/portraits/men/23.jpg',
+      status: 'offline',
+      lastSeen: new Date(Date.now() - 1000 * 60 * 60 * 3),
+      barberShop: 'The Barber Shop',
+      isFavorite: false
+    }
+  ]);
+
+  // Barbeiro selecionado atualmente
+  const [selectedBarber, setSelectedBarber] = useState<string>(barberContacts[0].id);
+  
+  // Estado para o texto da nova mensagem
+  const [newMessage, setNewMessage] = useState('');
+
+  // Formatar a timestamp
+  const formatTime = (date: Date) => {
+    return date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  };
+
+  // Enviar nova mensagem
+  const sendMessage = () => {
+    if (newMessage.trim() === '') return;
+    
+    const message: Message = {
+      id: Date.now().toString(),
+      sender: 'user',
+      text: newMessage,
+      timestamp: new Date(),
+      status: 'sent'
+    };
+    
+    setMessages([...messages, message]);
+    setNewMessage('');
+    
+    // Simulação de resposta do barbeiro após 2 segundos
+    setTimeout(() => {
+      const barberResponse: Message = {
+        id: (Date.now() + 1).toString(),
+        sender: 'barber',
+        text: 'Certo, anotado! Tem mais alguma dúvida sobre seu agendamento?',
+        timestamp: new Date(),
+        status: 'delivered'
+      };
+      
+      setMessages(prev => [...prev, barberResponse]);
+    }, 2000);
+  };
+
+  // Renderizar o componente de chat
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
@@ -43,88 +231,285 @@ const BarberChat = () => {
                 </div>
               </div>
               <div className="md:w-1/2">
-                <div className="relative">
-                  <div className="absolute -top-6 -left-6 w-32 h-32 bg-rose-500/30 rounded-full mix-blend-multiply filter blur-xl animate-blob"></div>
-                  <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-pink-500/30 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-2000"></div>
-                  <div className="bg-gradient-to-br from-gray-900/80 to-rose-900/80 backdrop-blur-sm border border-white/10 p-4 rounded-xl shadow-2xl">
-                    <div className="bg-white/10 backdrop-blur-sm rounded-lg overflow-hidden">
-                      <div className="p-3 border-b border-white/10 flex items-center">
-                        <div className="w-10 h-10 bg-rose-500/30 rounded-full overflow-hidden mr-3">
-                          <div className="w-full h-full flex items-center justify-center">
-                            <User className="text-white" size={20} />
-                          </div>
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6 }}
+                  className="bg-white rounded-xl shadow-xl overflow-hidden max-w-md mx-auto"
+                >
+                  <div className="bg-rose-600 text-white p-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center">
+                        <div className="relative">
+                          <img 
+                            src="https://randomuser.me/api/portraits/men/32.jpg" 
+                            alt="Barbeiro" 
+                            className="w-10 h-10 rounded-full object-cover"
+                          />
+                          <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
                         </div>
-                        <div>
-                          <h3 className="font-medium text-white">Carlos Ferreira</h3>
-                          <p className="text-xs text-white/70">Barbeiro • Online</p>
-                        </div>
-                      </div>
-                      
-                      <div className="h-64 p-3 overflow-y-auto">
-                        <div className="flex justify-start mb-3">
-                          <div className="bg-white/10 rounded-lg rounded-tl-none p-3 max-w-[80%]">
-                            <p className="text-sm text-white">Olá! Como posso ajudar você hoje?</p>
-                            <span className="text-xs text-white/50 mt-1 block">10:30</span>
-                          </div>
-                        </div>
-                        
-                        <div className="flex justify-end mb-3">
-                          <div className="bg-rose-500/30 rounded-lg rounded-tr-none p-3 max-w-[80%]">
-                            <p className="text-sm text-white">Oi Carlos! Estou pensando em fazer um degradê. Você tem disponibilidade para amanhã?</p>
-                            <span className="text-xs text-white/50 mt-1 block">10:32</span>
-                          </div>
-                        </div>
-                        
-                        <div className="flex justify-start mb-3">
-                          <div className="bg-white/10 rounded-lg rounded-tl-none p-3 max-w-[80%]">
-                            <p className="text-sm text-white">Claro! Tenho horário disponível amanhã às 14h ou 16h. Qual você prefere?</p>
-                            <span className="text-xs text-white/50 mt-1 block">10:33</span>
-                          </div>
-                        </div>
-                        
-                        <div className="flex justify-end mb-3">
-                          <div className="bg-rose-500/30 rounded-lg rounded-tr-none p-3 max-w-[80%]">
-                            <p className="text-sm text-white">Ótimo! Vou ficar com o horário das 14h. Estou enviando uma referência do estilo que gostaria.</p>
-                            <div className="mt-2 bg-white/10 rounded-lg p-1">
-                              <div className="h-20 bg-gray-800 rounded flex items-center justify-center">
-                                <Image size={24} className="text-white/50" />
-                              </div>
-                            </div>
-                            <span className="text-xs text-white/50 mt-1 block">10:35</span>
-                          </div>
+                        <div className="ml-3">
+                          <h3 className="font-medium">Rafael Costa</h3>
+                          <p className="text-xs text-rose-100">Online agora</p>
                         </div>
                       </div>
-                      
-                      <div className="p-3 border-t border-white/10">
-                        <div className="flex items-center">
-                          <div className="flex-1 bg-white/10 rounded-full px-4 py-2 flex items-center">
-                            <input 
-                              type="text" 
-                              placeholder="Digite sua mensagem..." 
-                              className="bg-transparent border-none outline-none text-white text-sm w-full placeholder-white/50"
-                            />
-                            <div className="flex items-center space-x-2 ml-2">
-                              <button aria-label="Anexar arquivo" className="text-white/70 hover:text-white">
-                                <Paperclip size={16} />
-                              </button>
-                              <button aria-label="Inserir emoji" className="text-white/70 hover:text-white">
-                                <Smile size={16} />
-                              </button>
-                            </div>
-                          </div>
-                          <button aria-label="Enviar mensagem" className="ml-2 p-2 bg-rose-500 rounded-full text-white">
-                            <Send size={16} />
-                          </button>
-                        </div>
+                      <div className="flex space-x-3">
+                        <button aria-label="Chamada de vídeo" className="text-white hover:bg-rose-700 p-1 rounded-full transition-colors">
+                          <Video size={18} />
+                        </button>
+                        <button aria-label="Chamada de áudio" className="text-white hover:bg-rose-700 p-1 rounded-full transition-colors">
+                          <Phone size={18} />
+                        </button>
+                        <button aria-label="Mais opções" className="text-white hover:bg-rose-700 p-1 rounded-full transition-colors">
+                          <MoreVertical size={18} />
+                        </button>
                       </div>
                     </div>
+                  </div>
+                  
+                  <div className="h-80 overflow-y-auto p-4 bg-gray-50 flex flex-col space-y-4" style={{ scrollBehavior: 'smooth' }}>
+                    {messages.map((message) => (
+                      <div 
+                        key={message.id}
+                        className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                      >
+                        <div 
+                          className={`max-w-[75%] rounded-2xl px-4 py-2 ${
+                            message.sender === 'user' 
+                              ? 'bg-rose-600 text-white rounded-tr-none' 
+                              : 'bg-gray-200 text-gray-800 rounded-tl-none'
+                          }`}
+                        >
+                          <p>{message.text}</p>
+                          <div className={`text-xs mt-1 flex items-center justify-end ${
+                            message.sender === 'user' ? 'text-rose-200' : 'text-gray-500'
+                          }`}>
+                            {formatTime(message.timestamp)}
+                            {message.sender === 'user' && (
+                              <span className="ml-1">
+                                {message.status === 'read' && <CheckCircle size={12} className="fill-current" />}
+                                {message.status === 'delivered' && <CheckCircle size={12} />}
+                                {message.status === 'sent' && <Check size={12} />}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  <div className="p-3 border-t flex items-center">
+                    <button aria-label="Adicionar arquivo" className="text-gray-500 hover:text-rose-600 p-2 rounded-full transition-colors">
+                      <Paperclip size={20} />
+                    </button>
+                    <button aria-label="Adicionar imagem" className="text-gray-500 hover:text-rose-600 p-2 rounded-full transition-colors">
+                      <Image size={20} />
+                    </button>
+                    <input 
+                      type="text"
+                      value={newMessage}
+                      onChange={(e) => setNewMessage(e.target.value)}
+                      onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
+                      placeholder="Digite sua mensagem..."
+                      className="flex-1 border-none outline-none px-3 py-2 bg-transparent"
+                    />
+                    <button aria-label="Emoji" className="text-gray-500 hover:text-rose-600 p-2 rounded-full transition-colors">
+                      <Smile size={20} />
+                    </button>
+                    <button 
+                      aria-label="Enviar mensagem"
+                      onClick={sendMessage}
+                      className="bg-rose-600 text-white p-2 rounded-full hover:bg-rose-700 transition-colors"
+                    >
+                      <Send size={20} />
+                    </button>
+                  </div>
+                </motion.div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Seção de Interface Completa */}
+        <section className="py-20 bg-white">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold mb-4">Interface Completa de Chat</h2>
+              <p className="text-gray-600 max-w-2xl mx-auto">
+                Explore nossa interface completa de chat, projetada para facilitar a comunicação entre clientes e barbeiros.
+              </p>
+            </div>
+            
+            <div className="bg-white rounded-xl shadow-xl overflow-hidden mx-auto max-w-6xl">
+              <div className="flex h-[600px]">
+                {/* Sidebar de contatos */}
+                <div className="w-1/3 border-r overflow-y-auto">
+                  <div className="p-4 border-b">
+                    <div className="relative">
+                      <input 
+                        type="text" 
+                        placeholder="Buscar conversa" 
+                        className="w-full pl-10 pr-4 py-2 bg-gray-100 rounded-lg outline-none"
+                      />
+                      <Search className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-500" size={18} />
+                    </div>
+                  </div>
+                  
+                  <div className="divide-y">
+                    {barberContacts.map((contact) => (
+                      <div 
+                        key={contact.id}
+                        onClick={() => setSelectedBarber(contact.id)}
+                        className={`flex items-center p-4 hover:bg-gray-50 cursor-pointer transition-colors ${
+                          selectedBarber === contact.id ? 'bg-gray-100' : ''
+                        }`}
+                      >
+                        <div className="relative">
+                          <img 
+                            src={contact.avatar} 
+                            alt={contact.name} 
+                            className="w-12 h-12 rounded-full object-cover"
+                          />
+                          <div 
+                            className={`absolute bottom-0 right-0 w-3 h-3 border-2 border-white rounded-full ${
+                              contact.status === 'online' ? 'bg-green-500' : 
+                              contact.status === 'away' ? 'bg-amber-500' : 'bg-gray-400'
+                            }`}
+                          ></div>
+                        </div>
+                        <div className="ml-3 flex-1">
+                          <div className="flex justify-between items-center">
+                            <h3 className="font-medium">{contact.name}</h3>
+                            <span className="text-xs text-gray-500">
+                              {contact.lastSeen ? formatTime(contact.lastSeen) : ''}
+                            </span>
+                          </div>
+                          <p className="text-sm text-gray-500 truncate">{contact.barberShop}</p>
+                        </div>
+                        {contact.unreadCount && contact.unreadCount > 0 && (
+                          <div className="bg-rose-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                            {contact.unreadCount}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                
+                {/* Área de chat principal */}
+                <div className="w-2/3 flex flex-col">
+                  {/* Cabeçalho do chat */}
+                  <div className="p-4 border-b flex items-center justify-between bg-white shadow-sm">
+                    <div className="flex items-center">
+                      <div className="relative">
+                        <img 
+                          src={barberContacts.find(c => c.id === selectedBarber)?.avatar} 
+                          alt="Barbeiro" 
+                          className="w-10 h-10 rounded-full object-cover"
+                        />
+                        <div 
+                          className={`absolute bottom-0 right-0 w-3 h-3 border-2 border-white rounded-full ${
+                            barberContacts.find(c => c.id === selectedBarber)?.status === 'online' ? 'bg-green-500' : 
+                            barberContacts.find(c => c.id === selectedBarber)?.status === 'away' ? 'bg-amber-500' : 'bg-gray-400'
+                          }`}
+                        ></div>
+                      </div>
+                      <div className="ml-3">
+                        <h3 className="font-medium">{barberContacts.find(c => c.id === selectedBarber)?.name}</h3>
+                        <p className="text-xs text-gray-500">
+                          {barberContacts.find(c => c.id === selectedBarber)?.status === 'online' 
+                            ? 'Online agora' 
+                            : barberContacts.find(c => c.id === selectedBarber)?.status === 'away'
+                            ? 'Ausente'
+                            : 'Offline'}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex space-x-3">
+                      <button aria-label="Chamada de vídeo" className="text-gray-500 hover:bg-gray-100 p-2 rounded-full transition-colors">
+                        <Video size={18} />
+                      </button>
+                      <button aria-label="Chamada de áudio" className="text-gray-500 hover:bg-gray-100 p-2 rounded-full transition-colors">
+                        <Phone size={18} />
+                      </button>
+                      <button aria-label="Informações" className="text-gray-500 hover:bg-gray-100 p-2 rounded-full transition-colors">
+                        <Info size={18} />
+                      </button>
+                    </div>
+                  </div>
+                  
+                  {/* Área de mensagens */}
+                  <div className="flex-grow overflow-y-auto p-4 bg-gray-50 flex flex-col space-y-4">
+                    {messages.map((message) => (
+                      <div 
+                        key={message.id}
+                        className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                      >
+                        {message.sender === 'barber' && (
+                          <img 
+                            src={barberContacts.find(c => c.id === selectedBarber)?.avatar} 
+                            alt="Barbeiro" 
+                            className="w-8 h-8 rounded-full object-cover mr-2 self-end"
+                          />
+                        )}
+                        <div 
+                          className={`max-w-[70%] rounded-2xl px-4 py-2 ${
+                            message.sender === 'user' 
+                              ? 'bg-rose-600 text-white rounded-tr-none' 
+                              : 'bg-gray-200 text-gray-800 rounded-tl-none'
+                          }`}
+                        >
+                          <p>{message.text}</p>
+                          <div className={`text-xs mt-1 flex items-center justify-end ${
+                            message.sender === 'user' ? 'text-rose-200' : 'text-gray-500'
+                          }`}>
+                            {formatTime(message.timestamp)}
+                            {message.sender === 'user' && (
+                              <span className="ml-1">
+                                {message.status === 'read' && <CheckCircle size={12} className="fill-current" />}
+                                {message.status === 'delivered' && <CheckCircle size={12} />}
+                                {message.status === 'sent' && <CheckCircle size={12} stroke="currentColor" fill="none" />}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  {/* Área de input */}
+                  <div className="p-4 border-t flex items-center bg-white">
+                    <button aria-label="Adicionar arquivo" className="text-gray-500 hover:text-rose-600 p-2 rounded-full transition-colors">
+                      <Paperclip size={20} />
+                    </button>
+                    <button aria-label="Adicionar imagem" className="text-gray-500 hover:text-rose-600 p-2 rounded-full transition-colors">
+                      <Image size={20} />
+                    </button>
+                    <input 
+                      type="text"
+                      value={newMessage}
+                      onChange={(e) => setNewMessage(e.target.value)}
+                      onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
+                      placeholder="Digite sua mensagem..."
+                      className="flex-1 border border-gray-200 rounded-full outline-none px-4 py-2 mx-2 focus:border-rose-500"
+                    />
+                    <button aria-label="Emoji" className="text-gray-500 hover:text-rose-600 p-2 rounded-full transition-colors">
+                      <Smile size={20} />
+                    </button>
+                    <button 
+                      aria-label="Enviar mensagem"
+                      onClick={sendMessage}
+                      className="bg-rose-600 text-white p-3 rounded-full hover:bg-rose-700 transition-colors"
+                    >
+                      <Send size={18} />
+                    </button>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </section>
-        
+
         {/* Features Section */}
         <section className="py-20 bg-white">
           <div className="container mx-auto px-4">

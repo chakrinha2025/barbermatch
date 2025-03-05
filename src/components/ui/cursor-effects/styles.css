@@ -1,0 +1,76 @@
+.custom-cursor {
+  opacity: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  position: fixed;
+  transform: translate(-50%, -50%);
+  transition: width 0.2s ease, height 0.2s ease, opacity 0.3s ease;
+  overflow: visible;
+  z-index: 10000;
+  mix-blend-mode: exclusion;
+}
+
+.custom-cursor.visible {
+  opacity: 1;
+}
+
+.cursor-primary, .cursor-trail.cursor-primary, .cursor-ripple.cursor-primary {
+  background-color: hsl(var(--primary));
+  box-shadow: 0 0 15px 0 hsla(var(--primary), 0.3);
+}
+
+.cursor-inverted, .cursor-trail.cursor-inverted, .cursor-ripple.cursor-inverted {
+  background-color: white;
+  box-shadow: 0 0 15px 0 rgba(255, 255, 255, 0.3);
+}
+
+.cursor-rainbow {
+  background: linear-gradient(45deg, #ff0000, #ff8000, #ffff00, #00ff00, #00ffff, #0000ff, #8000ff, #ff0080);
+  background-size: 300% 300%;
+  animation: rainbow-cursor 3s linear infinite;
+}
+
+.cursor-trail.cursor-rainbow {
+  opacity: 0.6;
+  animation: rainbow-cursor 3s linear infinite;
+}
+
+.cursor-ripple.cursor-rainbow {
+  background: linear-gradient(45deg, #ff0000, #ff8000, #ffff00, #00ff00, #00ffff, #0000ff, #8000ff, #ff0080);
+  background-size: 300% 300%;
+  animation: rainbow-cursor 3s linear infinite;
+}
+
+@keyframes rainbow-cursor {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.custom-cursor.is-pointer {
+  transform: translate(-50%, -50%) scale(1.5);
+  background-color: transparent !important;
+  border: 2px solid currentColor;
+  mix-blend-mode: difference;
+}
+
+.cursor-trail {
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+}
+
+.cursor-ripple {
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 9997;
+}
+
+/* Hide default cursor when our custom cursor is active */
+html.custom-cursor-active,
+html.custom-cursor-active * {
+  cursor: none !important;
+} 

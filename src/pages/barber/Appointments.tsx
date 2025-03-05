@@ -24,7 +24,7 @@ const INITIAL_APPOINTMENTS = [
     date: '2023-09-15',
     time: '14:30',
     duration: 45,
-    status: 'confirmed',
+    status: 'confirmed' as 'confirmed' | 'pending' | 'cancelled',
     price: 55,
     notes: 'Cliente prefere corte mais curto nas laterais'
   },
@@ -36,7 +36,7 @@ const INITIAL_APPOINTMENTS = [
     date: '2023-09-15',
     time: '16:00',
     duration: 20,
-    status: 'pending',
+    status: 'pending' as 'confirmed' | 'pending' | 'cancelled',
     price: 25,
     notes: ''
   },
@@ -48,7 +48,7 @@ const INITIAL_APPOINTMENTS = [
     date: '2023-09-16',
     time: '10:00',
     duration: 35,
-    status: 'confirmed',
+    status: 'confirmed' as 'confirmed' | 'pending' | 'cancelled',
     price: 40,
     notes: 'Primeira visita'
   },
@@ -60,7 +60,7 @@ const INITIAL_APPOINTMENTS = [
     date: '2023-09-16',
     time: '11:30',
     duration: 30,
-    status: 'cancelled',
+    status: 'cancelled' as 'confirmed' | 'pending' | 'cancelled',
     price: 35,
     notes: 'Cancelado pelo cliente'
   },
@@ -72,7 +72,7 @@ const INITIAL_APPOINTMENTS = [
     date: '2023-09-17',
     time: '15:00',
     duration: 25,
-    status: 'confirmed',
+    status: 'confirmed' as 'confirmed' | 'pending' | 'cancelled',
     price: 30,
     notes: ''
   },
@@ -169,7 +169,7 @@ const Appointments = () => {
   };
   
   // Obter classe de cor com base no status
-  const getStatusColor = (status: string) => {
+  const getStatusColor = (status: 'confirmed' | 'pending' | 'cancelled') => {
     switch (status) {
       case 'confirmed':
         return 'text-green-500 bg-green-50 dark:bg-green-950/30';
@@ -183,7 +183,7 @@ const Appointments = () => {
   };
   
   // Obter ícone com base no status
-  const getStatusIcon = (status: string) => {
+  const getStatusIcon = (status: 'confirmed' | 'pending' | 'cancelled') => {
     switch (status) {
       case 'confirmed':
         return <CheckCircle size={16} />;
@@ -197,7 +197,7 @@ const Appointments = () => {
   };
   
   // Obter label com base no status
-  const getStatusLabel = (status: string) => {
+  const getStatusLabel = (status: 'confirmed' | 'pending' | 'cancelled') => {
     switch (status) {
       case 'confirmed':
         return 'Confirmado';

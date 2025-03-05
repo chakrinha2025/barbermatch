@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Legend, LineChart, Line } from 'recharts';
 import { Calendar, Clock, TrendingUp, Users, Scissors, DollarSign, BarChart2, PieChart } from 'lucide-react';
@@ -312,8 +311,9 @@ export const TrendAnalyzer: React.FC<TrendAnalyzerProps> = ({
                 <span className="text-xs text-muted-foreground w-24">{style.name}</span>
                 <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
                   <div 
-                    className="h-full bg-blue-500 rounded-full"
+                    className={`h-full bg-blue-500 rounded-full`}
                     style={{ width: `${style.percentage}%` }}
+                    data-width={style.percentage}
                   ></div>
                 </div>
                 <span className="text-xs text-muted-foreground ml-2">{style.percentage}%</span>
@@ -330,12 +330,13 @@ export const TrendAnalyzer: React.FC<TrendAnalyzerProps> = ({
           </div>
           <div className="space-y-2">
             {clientDemographicsData.map((demo, index) => (
-              <div key={index} className="flex items-center">
-                <span className="text-xs text-muted-foreground w-24">{demo.name}</span>
+              <div key={index} className="flex items-center mb-1.5">
+                <span className="text-xs text-muted-foreground w-24 truncate">{demo.name}</span>
                 <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
                   <div 
-                    className="h-full bg-green-500 rounded-full"
+                    className={`h-full bg-green-500 rounded-full`}
                     style={{ width: `${demo.percentage}%` }}
+                    data-width={demo.percentage}
                   ></div>
                 </div>
                 <span className="text-xs text-muted-foreground ml-2">{demo.percentage}%</span>
@@ -352,12 +353,13 @@ export const TrendAnalyzer: React.FC<TrendAnalyzerProps> = ({
           </div>
           <div className="space-y-2">
             {serviceDurationData.map((service, index) => (
-              <div key={index} className="flex items-center">
-                <span className="text-xs text-muted-foreground w-24">{service.name}</span>
+              <div key={index} className="flex items-center mb-1.5">
+                <span className="text-xs text-muted-foreground w-24 truncate">{service.name}</span>
                 <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
                   <div 
-                    className="h-full bg-amber-500 rounded-full"
+                    className={`h-full bg-indigo-500 rounded-full`}
                     style={{ width: `${(service.value / 60) * 100}%` }}
+                    data-width={(service.value / 60) * 100}
                   ></div>
                 </div>
                 <span className="text-xs text-muted-foreground ml-2">{service.value} min</span>
@@ -398,15 +400,16 @@ export const TrendAnalyzer: React.FC<TrendAnalyzerProps> = ({
           <div className="flex items-center mb-3">
             <PieChart size={18} className="mr-2 text-red-500" />
             <h3 className="text-sm font-medium">Retenção de Clientes</h3>
-          </div>
+            </div>
           <div className="space-y-2">
             {customerRetentionData.map((category, index) => (
-              <div key={index} className="flex items-center">
-                <span className="text-xs text-muted-foreground w-24">{category.name}</span>
+              <div key={index} className="flex items-center mb-1.5">
+                <span className="text-xs text-muted-foreground w-24 truncate">{category.name}</span>
                 <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
                   <div 
-                    className="h-full bg-red-500 rounded-full"
+                    className={`h-full bg-amber-500 rounded-full`}
                     style={{ width: `${category.value}%` }}
+                    data-width={category.value}
                   ></div>
                 </div>
                 <span className="text-xs text-muted-foreground ml-2">{category.value}%</span>
@@ -422,8 +425,8 @@ export const TrendAnalyzer: React.FC<TrendAnalyzerProps> = ({
   const renderStats = () => {
     const stats = calculateStats();
     const color = getMetricColor(metric);
-    
-    return (
+
+  return (
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4">
         <div className="bg-card rounded-lg p-4 border">
           <p className="text-xs text-muted-foreground mb-1">Total</p>
@@ -468,12 +471,14 @@ export const TrendAnalyzer: React.FC<TrendAnalyzerProps> = ({
               <button 
                 className={`text-xs px-2 py-1 rounded-md ${view === 'chart' ? 'bg-primary text-white' : 'bg-muted hover:bg-muted/80'}`}
                 onClick={() => setView('chart')}
+                aria-label="Visualizar gráfico"
               >
                 <BarChart2 size={14} />
               </button>
               <button 
                 className={`text-xs px-2 py-1 rounded-md ${view === 'stats' ? 'bg-primary text-white' : 'bg-muted hover:bg-muted/80'}`}
                 onClick={() => setView('stats')}
+                aria-label="Visualizar estatísticas"
               >
                 <TrendingUp size={14} />
               </button>
@@ -523,8 +528,8 @@ export const TrendAnalyzer: React.FC<TrendAnalyzerProps> = ({
               >
                 Receita
               </button>
-            </div>
-            
+          </div>
+          
             {view === 'chart' && (
               <div className="flex ml-auto">
                 <button 
@@ -549,8 +554,8 @@ export const TrendAnalyzer: React.FC<TrendAnalyzerProps> = ({
             )}
           </div>
         )}
-      </div>
-      
+                </div>
+                
       {/* Content */}
       <div>
         {view === 'chart' ? (
@@ -567,4 +572,4 @@ export const TrendAnalyzer: React.FC<TrendAnalyzerProps> = ({
   );
 };
 
-export default TrendAnalyzer;
+export default TrendAnalyzer; 

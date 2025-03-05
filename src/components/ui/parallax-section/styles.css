@@ -1,0 +1,59 @@
+.parallax-section {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  min-height: 50vh;
+}
+
+.parallax-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 120%; /* Adiciona altura extra para o efeito de parallax */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  will-change: transform;
+  z-index: 1;
+}
+
+.parallax-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+}
+
+.parallax-content {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.parallax-layer {
+  position: relative;
+  will-change: transform;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+  .parallax-section {
+    min-height: 40vh;
+  }
+  
+  .parallax-bg {
+    height: 110%;
+  }
+} 

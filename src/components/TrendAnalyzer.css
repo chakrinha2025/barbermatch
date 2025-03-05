@@ -1,0 +1,24 @@
+.trend-bar-progress {
+  height: 100%;
+  border-radius: 9999px;
+}
+
+.trend-bar-blue {
+  background-color: #3b82f6; /* blue-500 */
+}
+
+.trend-bar-green {
+  background-color: #22c55e; /* green-500 */
+}
+
+.trend-bar-amber {
+  background-color: #f59e0b; /* amber-500 */
+}
+
+.trend-bar-indigo {
+  background-color: #6366f1; /* indigo-500 */
+}
+
+.trend-bar-purple {
+  background-color: #a855f7; /* purple-500 */
+} 

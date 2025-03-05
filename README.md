@@ -1,192 +1,136 @@
-# BarberMatch
+# BarberMatch - App de Agendamento e Gestão para Barbearias
 
-BarberMatch é uma plataforma inovadora que conecta clientes a barbeiros/barbearias de forma rápida e eficiente. A aplicação utiliza tecnologias como Inteligência Artificial (IA) e Realidade Aumentada (AR) para proporcionar uma experiência única aos usuários.
+![Logo BarberMatch](public/logo.svg)
 
-## Visão Geral do Projeto
+## Visão Geral
 
-O BarberMatch tem como objetivo revolucionar o setor de barbearias, facilitando o contato entre clientes e profissionais através de tecnologia avançada. Fundado por Taohan Batista, o projeto busca identificar e atender necessidades reais do mercado de beleza masculina, preenchendo lacunas existentes com soluções tecnológicas inovadoras.
+O BarberMatch é uma plataforma inovadora que conecta clientes a barbearias e barbeiros, simplificando o processo de agendamento e proporcionando ferramentas de gestão para profissionais do setor. A plataforma usa tecnologia avançada, incluindo análise de tendências e experimentação virtual de cortes de cabelo e barbas.
 
-## Funcionalidades Principais
-
-### Para Clientes
-- **Experimentação Virtual:** Teste cortes e estilos de barba via AR.
-- **Recomendações Personalizadas:** Sugestões de cortes com base no formato do rosto.
-- **Agendamento Inteligente:** Sistema de reserva com lembretes automáticos.
-- **Busca Avançada:** Filtragem por localização, especialidade, avaliações e disponibilidade.
-- **Pagamentos In-App:** Integração com Pix, cartões de crédito, Apple Pay, Google Pay.
-- **Chat com Barbeiros:** Comunicação direta com profissionais antes do agendamento.
-- **Análise de Tendências:** Acesso a estilos populares e tendências atuais.
-
-### Para Barbeiros/Barbearias
-- **Gestão de Agenda:** Controle de horários e clientes.
-- **Perfil Profissional:** Exibição de portfólio e avaliações.
-- **Análise de Desempenho:** Estatísticas e tendências de serviços.
-- **Fidelização de Clientes:** Promoções e programas de fidelidade.
-- **Sistema de Comunicação:** Chat integrado com clientes.
-- **Dashboard Personalizado:** Gestão completa do negócio, tanto no app quanto no site.
-- **Personalização Completa:** Adaptação da experiência conforme o modelo de negócio.
-
-### Para Administradores
-- **Painel de Controle Completo:** Acesso a todas as estatísticas da plataforma.
-- **Gerenciamento de Usuários:** Controle de clientes, barbeiros e barbearias.
-- **Moderação de Conteúdo:** Supervisão de avaliações e portfólios.
-- **Controle de Planos:** Gestão de assinaturas e recursos disponíveis.
-- **Relatórios Financeiros:** Acompanhamento de transações e métricas de negócio.
-
-## Planos e Monetização
-
-### Para Barbeiros e Barbearias
-- **Plano Gratuito:** Perfil básico, agendamento limitado e acesso a clientes locais.
-- **Plano Profissional:** Agendamento ilimitado, destaques na busca, acesso a estatísticas e fidelização.
-- **Plano Premium:** Todas as funcionalidades do Profissional + anúncios patrocinados, suporte prioritário e integração com ferramentas de marketing.
-- **Plano Personalizado:** Customização completa da experiência, com escolha de funcionalidades conforme a necessidade do negócio.
+## Principais Funcionalidades
 
 ### Para Clientes
-- **Assinatura VIP:** Acesso antecipado a promoções, descontos exclusivos e benefícios extras com barbeiros parceiros.
-- **Marketplace de Produtos:** Acesso a produtos de cuidados pessoais dentro do app, como pomadas, shampoos e acessórios.
+- **Busca de Barbeiros**: Encontre os melhores barbeiros próximos à sua localização
+- **Agendamento Inteligente**: Marque horários facilmente considerando a disponibilidade do profissional
+- **Experimentação Virtual**: Experimente cortes e estilos de barba antes do agendamento
+- **Perfil Personalizado**: Salve suas preferências e histórico de cortes
+
+### Para Barbeiros
+- **Gestão de Agenda**: Controle completo sobre horários e compromissos
+- **Gestão de Clientes**: Base de dados de clientes com preferências e histórico
+- **Estatísticas**: Visualização de desempenho e tendências de negócio
+- **Personalização de Serviços**: Configuração detalhada dos serviços oferecidos
+
+### Para Donos de Barbearias
+- **Gestão de Equipe**: Administre múltiplos barbeiros em um só lugar
+- **Dashboard Gerencial**: Indicadores de desempenho do negócio
+- **Recursos Premium**: Ferramentas avançadas para crescimento do estabelecimento
+
+## Planos e Preços
+
+O BarberMatch oferece diferentes planos para atender às necessidades específicas:
+
+- **Plano Básico**: Funcionalidades essenciais para iniciantes
+- **Plano Profissional**: Recursos avançados para barbeiros estabelecidos
+- **Plano Premium**: Soluções completas para barbearias com múltiplos profissionais
 
 ## Tecnologias Utilizadas
 
-### Frontend Web
-- React.js
-- TypeScript
-- TailwindCSS
-- Shadcn UI
-- Framer Motion para animações
-
-### Backend
-- Node.js com NestJS
-- Supabase (PostgreSQL gerenciado)
-- JWT para autenticação
-
-### Mobile
-- React Native
-- Expo
-- TailwindCSS
-
-### Tecnologias de IA e AR
-- TensorFlow
-- Face-api.js
-- DeepFace
-- Three.js
-- ARKit (iOS)
-- ARCore (Android)
-
-### Pagamentos e Integrações
-- Stripe, Pix, PayPal, Apple Pay, Google Pay, MercadoPago
-- API WhatsApp Business
-- OpenAI GPT para chatbots e suporte
+- **Frontend**: React, TypeScript, Tailwind CSS, Shadcn UI
+- **Backend**: Supabase (PostgreSQL, Autenticação, Storage)
+- **Estado**: React Query, Context API
+- **Roteamento**: React Router
+- **Estilização**: Tailwind CSS
+- **Animações**: Framer Motion
+- **Visualização de Dados**: Recharts
+- **Formulários**: React Hook Form, Zod
+- **Componentes de UI**: Radix UI, Lucide Icons
+- **Realidade Aumentada**: Face-api.js
 
 ## Estrutura do Projeto
 
-O projeto está organizado em:
+```
+src/
+├── api/            # Serviços e endpoints da API
+├── components/     # Componentes reutilizáveis
+│   └── ui/         # Componentes básicos de UI
+├── contexts/       # Contextos React
+├── hooks/          # Custom hooks
+├── layouts/        # Layouts de página
+├── lib/            # Utilitários e funções auxiliares
+│   └── ar/         # Funcionalidades de Realidade Aumentada
+├── pages/          # Páginas da aplicação
+│   ├── admin/      # Área administrativa
+│   ├── auth/       # Autenticação
+│   ├── barber/     # Área do barbeiro
+│   ├── client/     # Área do cliente
+│   └── features/   # Páginas de funcionalidades
+├── routes/         # Configuração de rotas
+├── styles/         # Estilos globais
+├── types/          # Definições de tipos TypeScript 
+├── utils/          # Funções utilitárias
+└── App.tsx         # Componente principal
+```
 
-- `/src`: Frontend React.js
-  - `/components`: Componentes reutilizáveis
-  - `/pages`: Páginas da aplicação
-    - `/features`: Páginas de recursos específicos
-    - `/auth`: Páginas de autenticação
-  - `/api`: Comunicação com o backend
-  - `/utils`: Funções utilitárias
-  - `/hooks`: React Hooks customizados
-  - `/contexts`: Contextos React para gerenciamento de estado
-  - `/lib`: Bibliotecas e configurações
-- `/server`: Backend NestJS (em desenvolvimento)
-  - `/src`: Código fonte do servidor
-    - `/modules`: Módulos da aplicação
-    - `/main.ts`: Ponto de entrada da aplicação
+## Instalação e Execução
 
-## Configuração e Instalação
-
-### Frontend
 ```bash
-# Instalar dependências
+# Clone o repositório
+git clone https://github.com/seu-usuario/barbermatch.git
+
+# Navegue até o diretório
+cd barbermatch
+
+# Instale as dependências
 npm install
 
-# Iniciar servidor de desenvolvimento
+# Configure as variáveis de ambiente
+cp .env.example .env
+# Edite o arquivo .env com suas credenciais do Supabase
+
+# Execute o projeto em modo de desenvolvimento
 npm run dev
 
-# Construir para produção
+# Para build de produção
 npm run build
+
+# Para configurar o banco de dados Supabase
+npx supabase login
+npx supabase init
+npx supabase start
 ```
 
-### Backend (em desenvolvimento)
-```bash
-# Navegar para o diretório do servidor
-cd server
+## Supabase Setup
 
-# Instalar dependências
-npm install
+O BarberMatch utiliza o Supabase como backend. Para configurar o banco de dados:
 
-# Iniciar servidor de desenvolvimento
-npm run start:dev
+1. Crie uma conta no [Supabase](https://supabase.io)
+2. Crie um novo projeto
+3. Copie suas credenciais para o arquivo `.env`
+4. Execute o script SQL em `supabase/sql_setup_admin.sql` no editor SQL do Supabase
 
-# Construir para produção
-npm run build
-```
+## Recursos Adicionais
 
-## Recursos Implementados
+- [Documentação da API](/docs/api)
+- [Guia de Estilo](/docs/style-guide)
+- [Política de Privacidade](/privacy)
+- [Termos de Uso](/terms)
 
-1. **Páginas de Recursos**:
-   - Chat com Barbeiros: Comunicação direta com profissionais
-   - Agendamento Inteligente: Sistema de reservas com IA
-   - Análise de Tendências: Visualização de estilos populares
-   - Descoberta de Barbeiros: Busca avançada por profissionais
-   - Experiência Virtual: Teste de cortes com AR
-   - Gestão de Negócio: Dashboard para barbeiros
+## Análise de Tendências
 
-2. **Sistema de Acesso**:
-   - Lógica de verificação de planos
-   - Redirecionamentos contextuais
-   - Acesso controlado por tipo de recurso
-   - Experiência personalizada por plano
+O BarberMatch possui uma poderosa ferramenta de análise de tendências que permite aos barbeiros e donos de barbearias acompanharem:
 
-3. **Páginas de Fundadores**:
-   - Taohan Batista: Fundador e CEO
-   - Thales Batista: Colaborador em Marketing e Criação
+- Estilos de corte mais populares
+- Horários de maior demanda
+- Comportamento sazonal dos clientes
+- Preferências por região
 
-## Contribuição
+## Contato e Suporte
 
-Para contribuir com o projeto, siga as etapas:
+Para dúvidas, sugestões ou suporte técnico, entre em contato através de:
 
-1. Faça um fork do repositório
-2. Crie uma branch para sua feature (`git checkout -b feature/nome-da-feature`)
-3. Faça commit das suas alterações (`git commit -m 'Adiciona nova feature'`)
-4. Faça push para a branch (`git push origin feature/nome-da-feature`)
-5. Abra um Pull Request
+- Email: contato@barbermatch.com.br
+- WhatsApp: (11) 99999-9999
 
-## Licença
+---
 
-Este projeto está licenciado sob a licença MIT - veja o arquivo LICENSE para mais detalhes.
-
-## Contato
-
-Para mais informações, sugestões ou dúvidas, entre em contato pelo email: contato@barbermatch.com
-
-## Correções de Funcionalidade (03/03/2025)
-
-As seguintes correções foram implementadas para resolver problemas de funcionalidade na aplicação:
-
-1. **Navegação do site:**
-   - Corrigido o problema onde o dropdown do menu de soluções só funcionava na página inicial
-   - Implementado redirecionamento correto para links de âncora quando o usuário não está na página inicial
-   - Adicionada transição suave para o dropdown do menu de soluções
-
-2. **Login de dono de barbearia:**
-   - Corrigido o problema de redirecionamento após o login
-   - Adicionado logging para facilitar a depuração
-   - Implementado um timeout para garantir que o redirecionamento ocorra corretamente
-
-3. **Autenticação e autorização:**
-   - Aprimorado o componente PrivateRoute para verificação mais robusta de autenticação
-   - Adicionado feedback visual durante o carregamento da verificação de credenciais
-   - Implementada notificação de erro ao tentar acessar páginas sem permissão
-
-4. **Dashboard do dono de barbearia:**
-   - Melhorado o carregamento de dados para evitar placeholders vazios
-   - Adicionado logging para facilitar a depuração
-   - Implementadas mensagens de erro mais descritivas
-
-Para testar o login como dono de barbearia, use as seguintes credenciais:
-- Email: barbearia@exemplo.com
-- Senha: senha123
+&copy; 2024 BarberMatch - Todos os direitos reservados.
