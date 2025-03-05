@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Star, MapPin, Clock, Scissors, Calendar, Phone, MessageSquare, ChevronRight, ChevronLeft, Check } from 'lucide-react';
+import { Star, MapPin, Clock, Scissors, Calendar, Phone, MessageSquare, ChevronRight, ChevronLeft, Check, Lock } from 'lucide-react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import BasicAppointmentForm from '../../components/BasicAppointmentForm';
@@ -262,15 +261,15 @@ const BarberProfile = () => {
                         <span>Lista de Serviços</span>
                       </li>
                       <li className="flex items-start opacity-50">
-                        <Lock className="h-5 w-5 mt-0.5 mr-2 flex-shrink-0" />
+                        <Lock size={16} className="mr-1" />
                         <span>Chat em Tempo Real</span>
                       </li>
                       <li className="flex items-start opacity-50">
-                        <Lock className="h-5 w-5 mt-0.5 mr-2 flex-shrink-0" />
+                        <Lock size={16} className="mr-1" />
                         <span>Visualização 3D de Estilos</span>
                       </li>
                       <li className="flex items-start opacity-50">
-                        <Lock className="h-5 w-5 mt-0.5 mr-2 flex-shrink-0" />
+                        <Lock size={16} className="mr-1" />
                         <span>Histórico Completo</span>
                       </li>
                     </ul>
